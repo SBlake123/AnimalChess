@@ -30,6 +30,7 @@ public class TouchManager : MonoBehaviour
 
             if (hit.collider != null)
             {
+                //선택된 말이 없이 자기 턴인 상태인 경우
                 if (selectAnimal == null)
                 {
                     if (hit.collider.gameObject.GetComponent<Giraffe>())
@@ -56,7 +57,10 @@ public class TouchManager : MonoBehaviour
                         selectAnimalBase = hit.collider.gameObject.GetComponent<Chick>();
                         Debug.Log("Chick");
                     }
+                    else if (hit.collider.tag == "GAMEBOARD" || hit.collider.tag == "BACKGROUND")
+                        Debug.Log("null");
                 }
+                //선택된 말이 있는 경우 자기턴인 상태인 경우
                 else if (selectAnimal != null)
                 {
                     if (hit.collider.tag == "GAMEBOARD")
@@ -68,11 +72,11 @@ public class TouchManager : MonoBehaviour
                             selectAnimal = null;
                             selectAnimalBase = null;
                         }
-                        else Debug.Log("Can't move");
+                        TurnManager.instance.TurnOver();
                     }
                     else if (hit.collider.tag == "ANIMAL")
                     {
-                        if(hit.transform.GetComponentInChildren<AnimalBase>().player != selectAnimal.GetComponent<AnimalBase>().player)
+                        if (hit.transform.GetComponentInChildren<AnimalBase>().player != selectAnimal.GetComponent<AnimalBase>().player)
                         {
                             selectAnimal.transform.position = hit.collider.transform.parent.position + new Vector3(0, 0, -0.1f);
                             selectAnimal.transform.parent = hit.collider.transform.parent;
@@ -80,9 +84,12 @@ public class TouchManager : MonoBehaviour
                             selectAnimal = null;
                             selectAnimalBase = null;
                         }
+                        TurnManager.instance.TurnOver();
                     }
                     else if (hit.collider.tag == "BACKGROUND") { Debug.Log("null"); }
                 }
+                else
+                    Debug.Log("null");
             }
         }
     }
