@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Chick : AnimalBase
 {
+    public override bool canMove { get; set; }
+    public override Player player { get; set; } = Player.player_one;
+
     public override void Move()
     {
         throw new System.NotImplementedException();
