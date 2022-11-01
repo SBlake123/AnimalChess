@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class Lion : AnimalBase
 {
-    public override bool canMove { get; set; }
-    public override Player player { get; set; } = Player.player_one;
-
-    public override void Move()
+    public override void Move(GameObject gameObject)
     {
         throw new System.NotImplementedException();
     }

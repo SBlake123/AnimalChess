@@ -238,6 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22bb5edb56e8c32409d2f133e585653a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: 0
 --- !u!65 &142035740
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -447,6 +448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e28495b9ce4b7c044bba31659d0b2b77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: 1
 --- !u!65 &148205161
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1019,7 +1021,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e60ae392b7a44b24aa56047079a10c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: 1
   transforms:
   - {fileID: 2136373734}
   - {fileID: 112976148}
@@ -1579,7 +1580,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectAnimal: {fileID: 0}
   selectAnimalBase: {fileID: 0}
-  inventory: {fileID: 0}
+  inventoryOne: {fileID: 984615187}
+  inventoryTwo: {fileID: 421484529}
 --- !u!4 &667144926
 Transform:
   m_ObjectHideFlags: 0
@@ -1906,6 +1908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1119277922063b8478765d00d0ea2616, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: 1
 --- !u!65 &957500146
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2016,7 +2019,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e60ae392b7a44b24aa56047079a10c84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: 0
   transforms:
   - {fileID: 897375120}
   - {fileID: 240424440}
@@ -2128,6 +2130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 218dbe1c1ff6a2248b1afd70e6b26713, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: 0
 --- !u!65 &1068772534
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2757,6 +2760,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb70f5c2aae42fe4bac363c18d1d4bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_mainArray:
+  - m_subArray:
+    - {fileID: 434359384}
+    - {fileID: 223254049}
+    - {fileID: 147087989}
+  - m_subArray:
+    - {fileID: 2079276591}
+    - {fileID: 265474017}
+    - {fileID: 1729146820}
+  - m_subArray:
+    - {fileID: 172493372}
+    - {fileID: 829039262}
+    - {fileID: 849336244}
+  - m_subArray:
+    - {fileID: 1185306411}
+    - {fileID: 2075774527}
+    - {fileID: 656628475}
 --- !u!1 &1656595316
 GameObject:
   m_ObjectHideFlags: 0

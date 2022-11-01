@@ -10,16 +10,14 @@ public class TouchManager : MonoBehaviour
 #if PC
     public GameObject selectAnimal;
     public AnimalBase selectAnimalBase;
-    public Inventory inventory;
+    public Inventory inventoryOne;
+    public Inventory inventoryTwo;
     // Update is called once per frame
     void Update()
     {
         MouseClickAndMove();
     }
-    //클릭하고 원하는 방향으로 클릭하면 움직인다.
-    //다른 기물을 선택하면 선택이 취소된다.
-    //각각의 동물을 선택했을 때, 갈 수 있는 방향의 게임보드로만 이동할 수 있다.
-    //그 방향은 동물들이 알고 있어야 한다. 동물의 정보를 빌려와야 한다.
+    
     private void MouseClickAndMove()
     {
         if (Input.GetMouseButtonDown(0))
@@ -58,35 +56,70 @@ public class TouchManager : MonoBehaviour
                         Debug.Log("Chick");
                     }
                     else if (hit.collider.tag == "GAMEBOARD" || hit.collider.tag == "BACKGROUND")
-                        Debug.Log("null");
+                    {
+                        selectAnimal = null;
+                        selectAnimalBase = null;
+                    }
                 }
                 //선택된 말이 있는 경우 자기턴인 상태인 경우
                 else if (selectAnimal != null)
                 {
                     if (hit.collider.tag == "GAMEBOARD")
                     {
-                        if (hit.transform.childCount == 0 || hit.transform.GetComponentInChildren<AnimalBase>().player != selectAnimal.GetComponent<AnimalBase>().player)
+                        if ((hit.transform.childCount == 0 && ((selectAnimalBase.player).ToString() == (TurnManager.instance.player).ToString())))      
                         {
                             selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
                             selectAnimal.transform.parent = hit.collider.transform;
+                            selectAnimalBase.parent = hit.collider.gameObject;
+
                             selectAnimal = null;
                             selectAnimalBase = null;
+                            TurnManager.instance.TurnOver();
                         }
-                        TurnManager.instance.TurnOver();
+                        else if(hit.transform.childCount == 1 && ((hit.transform.GetComponentInChildren<AnimalBase>().player != selectAnimalBase.player)))
+                        {
+                            selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
+                            selectAnimal.transform.parent = hit.collider.transform;
+                            selectAnimalBase.parent = hit.collider.gameObject;
+
+                            ToInven(hit.transform.GetComponentInChildren<AnimalBase>());
+                            selectAnimal = null;
+                            selectAnimalBase = null;
+                            TurnManager.instance.TurnOver();
+                        }
+                        else
+                        {
+                            selectAnimal = null;
+                            selectAnimalBase = null;
+                            return;
+                        }
+                        
                     }
                     else if (hit.collider.tag == "ANIMAL")
                     {
-                        if (hit.transform.GetComponentInChildren<AnimalBase>().player != selectAnimal.GetComponent<AnimalBase>().player)
+                        if (hit.transform.GetComponent<AnimalBase>().player != selectAnimal.GetComponent<AnimalBase>().player && (selectAnimalBase.player).ToString() == (TurnManager.instance.player).ToString())
                         {
                             selectAnimal.transform.position = hit.collider.transform.parent.position + new Vector3(0, 0, -0.1f);
                             selectAnimal.transform.parent = hit.collider.transform.parent;
-                            ToInven();
+                            selectAnimalBase.parent = hit.collider.transform.parent.gameObject;
+
+                            ToInven(hit.transform.GetComponent<AnimalBase>());
+                            selectAnimal = null;
+                            selectAnimalBase = null;
+                            TurnManager.instance.TurnOver();
+                        }
+                        else
+                        {
                             selectAnimal = null;
                             selectAnimalBase = null;
                         }
-                        TurnManager.instance.TurnOver();
+                        
                     }
-                    else if (hit.collider.tag == "BACKGROUND") { Debug.Log("null"); }
+                    else if (hit.collider.tag == "BACKGROUND") 
+                    {
+                        selectAnimal = null;
+                        selectAnimalBase = null;
+                    }
                 }
                 else
                     Debug.Log("null");
@@ -94,10 +127,14 @@ public class TouchManager : MonoBehaviour
         }
     }
 
-    public void ToInven()
+    public void ToInven(AnimalBase animalBase)
     {
-        //플레이어 원이 딴 애는 플레이어 원 인벤토리에, 투가 따면 투 인벤토리에, 인벤토리에는 enum이 있으며, 
+        if (animalBase.player == AnimalBase.Player.player_one)
+            inventoryOne.SetTransform(animalBase);
+        else
+            inventoryTwo.SetTransform(animalBase);
     }
+    
 
 #endif
 }

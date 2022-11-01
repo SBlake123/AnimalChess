@@ -4,11 +4,12 @@ using UnityEngine;
 
 public abstract class AnimalBase : MonoBehaviour
 {
-    public enum Player { player_one, player_two, none }
+    public bool canMove;
+    public GameObject parent;
 
-    public abstract Player player { get; set; }
+    public enum Player { player_one, player_two };
+    public Player player = Player.player_one;
 
-    public abstract bool canMove { get;set; }
-    public abstract void Move();
+    public abstract void Move(GameObject gameObject);
     public abstract void Select();
 }

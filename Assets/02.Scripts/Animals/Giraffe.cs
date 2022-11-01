@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Giraffe : AnimalBase
 {
-    public override bool canMove { get; set; }
-    public override Player player { get; set; } = Player.player_two;
 
-    public override void Move()
+    public override void Move(GameObject gameObject)
     {
         throw new System.NotImplementedException();
     }

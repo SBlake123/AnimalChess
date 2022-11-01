@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class Chick : AnimalBase
 {
-    public override bool canMove { get; set; }
-    public override Player player { get; set; } = Player.player_one;
-
-    public override void Move()
+    public override void Move(GameObject gameObject)
     {
-        throw new System.NotImplementedException();
+        if(player == Player.player_one)
+        {
+            
+        }
+        else
+        {
+
+        }
     }
 
     public override void Select()
