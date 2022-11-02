@@ -2218,7 +2218,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f5a4a23030aa2bb4d9ff3fca599f0a73, type: 3}
   m_Color: {r: 0.41509432, g: 0.38141686, b: 0.38141686, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2994,6 +2994,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ee344c4f10123644909599d6c0c9585, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  invadeSuccessPlayer: 
+  invadeSuccessCount: 0
 --- !u!4 &1460958513
 Transform:
   m_ObjectHideFlags: 0
@@ -3392,7 +3394,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
-  m_DragThreshold: 10
+  m_DragThreshold: 100
 --- !u!4 &1656595319
 Transform:
   m_ObjectHideFlags: 0

@@ -6,17 +6,29 @@ public class Chick : AnimalBase
 {
     public void Start()
     {
+        ImageChange();
         parent = transform.parent.gameObject;
         transform.position = transform.parent.position + new Vector3(0, 0, -0.1f);
     }
+
+    public override void ImageChange()
+    {
+        if (player == Player.player_one)
+            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("chickOne");
+        else
+            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("chickTwo");
+    }
+
+
 
     public override bool Move()
     {
         if (parent != null)
         {
+            Cell parentCell = parent.GetComponent<Cell>();
             if (player == Player.player_one)
             {
-                if (parent.GetComponent<Cell>().y == nextCell.y - 1 && nextCell.y >= 0)
+                if ((parentCell.y == nextCell.y - 1 && nextCell.y >= 0) && parentCell.x == nextCell.x)
                 {
                     return true;
                 }
@@ -26,7 +38,7 @@ public class Chick : AnimalBase
 
             else if (player == Player.player_two)
             {
-                if (parent.GetComponent<Cell>().y == nextCell.y + 1 && nextCell.y <= 3)
+                if ((parentCell.y == nextCell.y + 1 && nextCell.y <= 3)  && parentCell.x == nextCell.x)
                 {
                     return true;
                 }

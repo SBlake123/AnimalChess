@@ -13,7 +13,7 @@ public class Inventory : MonoBehaviour
             if(transforms[i].childCount == 0)
             {
                 animalBase.transform.position = transforms[i].transform.position + new Vector3(0, 0, -0.1f);
-                animalBase.transform.parent = transforms[i].transform;
+                animalBase.transform.SetParent(transforms[i].transform);
                 if(animalBase is Lion)
                 {
                     string player = (animalBase.player).ToString();

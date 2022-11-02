@@ -6,8 +6,17 @@ public class Elephant : AnimalBase
 {
     public void Start()
     {
+        ImageChange();
         parent = transform.parent.gameObject;
         transform.position = transform.parent.position + new Vector3(0, 0, -0.1f);
+    }
+
+    public override void ImageChange()
+    {
+        if (player == Player.player_one)
+            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("elephantOne");
+        else
+            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("elephantTwo");
     }
 
     public override bool Move()

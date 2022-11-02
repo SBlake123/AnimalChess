@@ -14,6 +14,7 @@ public abstract class AnimalBase : MonoBehaviour
     public Player player = Player.player_one;
 
     public abstract bool Move();
+    public abstract void ImageChange();
 
     public bool Return()
     {

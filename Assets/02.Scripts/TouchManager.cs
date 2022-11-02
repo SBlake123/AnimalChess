@@ -1,4 +1,4 @@
-//#define PC
+#define PC
 #define MOBILE
 using System;
 using System.Collections;
@@ -15,6 +15,7 @@ public class TouchManager : MonoBehaviour
     void Update()
     {
         MouseClickAndMove();
+        TouchAndMove();
     }
 
 #if PC
@@ -212,11 +213,12 @@ public class TouchManager : MonoBehaviour
             animalBase.player = AnimalBase.Player.player_two;
             inventoryTwo.SetTransform(animalBase);
         }
+        animalBase.ImageChange();
     }
 #endif
 #if MOBILE
 
-    private void MouseClickAndMove()
+    private void TouchAndMove()
     {
         if (Input.touchCount > 0)
         {
@@ -282,7 +284,7 @@ public class TouchManager : MonoBehaviour
                                     selectAnimal.transform.parent = hit.collider.transform;
                                     selectAnimalBase.parent = hit.collider.gameObject;
 
-                                    ToInven(hit.transform.GetComponentInChildren<AnimalBase>());
+                                    ToInvenMoblie(hit.transform.GetComponentInChildren<AnimalBase>());
                                     selectAnimal = null;
                                     selectAnimalBase = null;
                                     TurnManager.instance.TurnOver();
@@ -316,7 +318,7 @@ public class TouchManager : MonoBehaviour
                                     selectAnimal.transform.parent = hit.collider.transform.parent;
                                     selectAnimalBase.parent = hit.collider.transform.parent.gameObject;
 
-                                    ToInven(hit.transform.GetComponent<AnimalBase>());
+                                    ToInvenMoblie(hit.transform.GetComponent<AnimalBase>());
 
                                     selectAnimal = null;
                                     selectAnimalBase = null;
@@ -396,7 +398,7 @@ public class TouchManager : MonoBehaviour
         }
     }
 
-    public void ToInven(AnimalBase animalBase)
+    public void ToInvenMoblie(AnimalBase animalBase)
     {
         if (animalBase.player == AnimalBase.Player.player_two)
         {
@@ -411,6 +413,7 @@ public class TouchManager : MonoBehaviour
             animalBase.player = AnimalBase.Player.player_two;
             inventoryTwo.SetTransform(animalBase);
         }
+        animalBase.ImageChange();
     }
 #endif
 }
