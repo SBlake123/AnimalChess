@@ -4,12 +4,36 @@ using UnityEngine;
 
 public abstract class AnimalBase : MonoBehaviour
 {
-    public bool canMove;
+    public int x;
+    public int y;
+
     public GameObject parent;
+    public Cell nextCell;
 
     public enum Player { player_one, player_two };
     public Player player = Player.player_one;
 
-    public abstract void Move(GameObject gameObject);
+    public abstract bool Move();
+
+    public bool Return()
+    {
+        if (player == Player.player_one)
+        {
+            if (nextCell.y >= 0 && nextCell.y <= 2)
+                return true;
+            else
+                return false;
+        }
+        else if (player == Player.player_two)
+        {
+            if (nextCell.y >= 1 && nextCell.y <= 3)
+                return true;
+            else
+                return false;
+        }
+        else
+            return false;
+
+    }
     public abstract void Select();
 }

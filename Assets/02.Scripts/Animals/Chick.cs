@@ -4,20 +4,49 @@ using UnityEngine;
 
 public class Chick : AnimalBase
 {
-    public override void Move(GameObject gameObject)
+    public void Start()
     {
-        if(player == Player.player_one)
+        parent = transform.parent.gameObject;
+        transform.position = transform.parent.position + new Vector3(0, 0, -0.1f);
+    }
+
+    public override bool Move()
+    {
+        if (parent != null)
         {
-            
+            if (player == Player.player_one)
+            {
+                if (parent.GetComponent<Cell>().y == nextCell.y - 1 && nextCell.y >= 0)
+                {
+                    return true;
+                }
+                else
+                    return false;
+            }
+
+            else if (player == Player.player_two)
+            {
+                if (parent.GetComponent<Cell>().y == nextCell.y + 1 && nextCell.y <= 3)
+                {
+                    return true;
+                }
+                else
+                    return false;
+            }
+            else
+                return false;
         }
         else
-        {
-
-        }
+            return false;
     }
+
+
 
     public override void Select()
     {
         throw new System.NotImplementedException();
     }
 }
+
+
+

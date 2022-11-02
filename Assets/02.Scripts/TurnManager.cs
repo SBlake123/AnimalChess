@@ -22,7 +22,4 @@ public class TurnManager : MonoBehaviour
             player = Player.player_one;
         Debug.Log($"{player}'s Turn");
     }
-
-    //턴이 넘어가는 것은 말의 이동, 말을 재배치했을때;
-    //게임보드에 칠드런이 변화할 때==
 }
