@@ -36,5 +36,4 @@ public abstract class AnimalBase : MonoBehaviour
             return false;
 
     }
-    public abstract void Select();
 }

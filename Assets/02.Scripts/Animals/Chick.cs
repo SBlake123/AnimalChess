@@ -38,7 +38,7 @@ public class Chick : AnimalBase
 
             else if (player == Player.player_two)
             {
-                if ((parentCell.y == nextCell.y + 1 && nextCell.y <= 3)  && parentCell.x == nextCell.x)
+                if ((parentCell.y == nextCell.y + 1 && nextCell.y <= 3) && parentCell.x == nextCell.x)
                 {
                     return true;
                 }
@@ -50,13 +50,6 @@ public class Chick : AnimalBase
         }
         else
             return false;
-    }
-
-
-
-    public override void Select()
-    {
-        throw new System.NotImplementedException();
     }
 }
 

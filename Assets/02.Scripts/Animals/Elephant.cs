@@ -28,11 +28,11 @@ public class Elephant : AnimalBase
             {
                 if (nextCell.x >= 0 && nextCell.x <= 2 && nextCell.y >= 0 && nextCell.y <= 3)
                 {
-                    if (parentCell.y+1 == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
+                    if (parentCell.y + 1 == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
                     {
                         return true;
                     }
-                    else if (parentCell.y-1 == nextCell.y && (parentCell.x== nextCell.x - 1 || parentCell.x == nextCell.x + 1))
+                    else if (parentCell.y - 1 == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
                     {
                         return true;
                     }
@@ -66,11 +66,5 @@ public class Elephant : AnimalBase
         }
         else
             return false;
-    }
-
-
-    public override void Select()
-    {
-        throw new System.NotImplementedException();
     }
 }

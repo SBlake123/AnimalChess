@@ -26,7 +26,7 @@ public class Giraffe : AnimalBase
             Cell parentCell = parent.GetComponent<Cell>();
             if (player == Player.player_one)
             {
-                if (nextCell.x >= 0 && nextCell.x<=2 && nextCell.y >= 0 && nextCell.y<=3)
+                if (nextCell.x >= 0 && nextCell.x <= 2 && nextCell.y >= 0 && nextCell.y <= 3)
                 {
                     if (parentCell.y == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
                     {
@@ -38,7 +38,7 @@ public class Giraffe : AnimalBase
                     }
                     else
                         return false;
-                }            
+                }
                 else
                     return false;
             }
@@ -66,11 +66,5 @@ public class Giraffe : AnimalBase
         }
         else
             return false;
-    }
-
-
-    public override void Select()
-    {
-        throw new System.NotImplementedException();
     }
 }

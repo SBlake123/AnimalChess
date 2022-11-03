@@ -88,14 +88,9 @@ public class Lion : AnimalBase
             return false;
     }
 
-    public override void Select()
-    {
-        throw new System.NotImplementedException();
-    }
-
     public void LionInvade()
     {
-        if(nextCell != null)
+        if (nextCell != null)
         {
             if (player == Player.player_one)
             {
