@@ -7,8 +7,6 @@ public class Elephant : AnimalBase
     public void Start()
     {
         ImageChange();
-        parent = transform.parent.gameObject;
-        transform.position = transform.parent.position + new Vector3(0, 0, -0.1f);
     }
 
     public override void ImageChange()
