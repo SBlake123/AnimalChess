@@ -1444,8 +1444,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba8ca9b0fb89e940b562e0c9bbc575c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: 0
+  cells:
+  - {fileID: 434359388}
+  - {fileID: 2079276595}
+  - {fileID: 172493376}
+  - {fileID: 1185306415}
+  - {fileID: 223254053}
+  - {fileID: 265474021}
+  - {fileID: 829039266}
+  - {fileID: 2075774531}
+  - {fileID: 147087993}
+  - {fileID: 1729146824}
+  - {fileID: 849336248}
+  - {fileID: 656628479}
   selectAnimal: {fileID: 0}
   selectAnimalBase: {fileID: 0}
+  toInvenAnimal: {fileID: 0}
   inventoryOne: {fileID: 984615187}
   inventoryTwo: {fileID: 421484529}
 --- !u!4 &667144926

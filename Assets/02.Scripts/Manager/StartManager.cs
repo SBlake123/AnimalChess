@@ -31,8 +31,8 @@ public class StartManager : MonoBehaviour
                     {
                         AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.ELEPHANT_ONE);
                         AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.parent = item.transform.gameObject;
-                        animalinst.transform.parent = item.transform;
+                        animalinst.transform.SetParent(item.transform);
+                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
                         animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
                         break;
                     }
@@ -40,8 +40,8 @@ public class StartManager : MonoBehaviour
                     {
                         AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.GIRAFFE_TWO);
                         AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.parent = item.transform.gameObject;
-                        animalinst.transform.parent = item.transform;
+                        animalinst.transform.SetParent(item.transform);
+                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
                         animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
                         break;
                     }
@@ -49,8 +49,8 @@ public class StartManager : MonoBehaviour
                     {
                         AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.LION_ONE);
                         AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.parent = item.transform.gameObject;
-                        animalinst.transform.parent = item.transform;
+                        animalinst.transform.SetParent(item.transform);
+                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
                         animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
                         break;
                     }
@@ -58,8 +58,8 @@ public class StartManager : MonoBehaviour
                     {
                         AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.CHICK_ONE);
                         AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.parent = item.transform.gameObject;
-                        animalinst.transform.parent = item.transform;
+                        animalinst.transform.SetParent(item.transform);
+                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
                         animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
                         break;
                     }
@@ -67,8 +67,8 @@ public class StartManager : MonoBehaviour
                     {
                         AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.CHICK_TWO);
                         AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.parent = item.transform.gameObject;
-                        animalinst.transform.parent = item.transform;
+                        animalinst.transform.SetParent(item.transform);
+                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
                         animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
                         break;
                     }
@@ -76,8 +76,8 @@ public class StartManager : MonoBehaviour
                     {
                         AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.LION_TWO);
                         AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.parent = item.transform.gameObject;
-                        animalinst.transform.parent = item.transform;
+                        animalinst.transform.SetParent(item.transform);
+                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
                         animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
                         break;
                     }
@@ -85,8 +85,8 @@ public class StartManager : MonoBehaviour
                     {
                         AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.GIRAFFE_ONE);
                         AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.parent = item.transform.gameObject;
-                        animalinst.transform.parent = item.transform;
+                        animalinst.transform.SetParent(item.transform);
+                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
                         animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
                         break;
                     }
@@ -94,8 +94,8 @@ public class StartManager : MonoBehaviour
                     {
                         AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.ELEPHANT_TWO);
                         AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.parent = item.transform.gameObject;
-                        animalinst.transform.parent = item.transform;
+                        animalinst.transform.SetParent(item.transform);
+                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
                         animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
                         break;
                     }

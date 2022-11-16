@@ -23,9 +23,9 @@ public class Lion : AnimalBase
     }
     public override bool Move()
     {
-        if (parent != null)
+        if (transform.parent != null)
         {
-            Cell parentCell = parent.GetComponent<Cell>();
+            parentCell = transform.parent.GetComponent<Cell>();
             if (player == Player.player_one)
             {
                 if (nextCell.x >= 0 && nextCell.x <= 2 && nextCell.y >= 0 && nextCell.y <= 3)

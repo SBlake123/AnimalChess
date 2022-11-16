@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Chick : AnimalBase
 {
+    private bool isEvolve;
+
     public void Start()
     {
         ImageChange();
@@ -17,17 +19,17 @@ public class Chick : AnimalBase
             transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("chickTwo");
     }
 
-
-
     public override bool Move()
     {
-        if (parent != null)
+        if (!isEvolve)
         {
-            Cell parentCell = parent.GetComponent<Cell>();
+            parentCell = transform.parent.GetComponent<Cell>();
             if (player == Player.player_one)
             {
                 if ((parentCell.y == nextCell.y - 1 && nextCell.y >= 0) && parentCell.x == nextCell.x)
                 {
+                    if (nextCell.y == 3)
+                        Evolve(player);
                     return true;
                 }
                 else
@@ -38,6 +40,8 @@ public class Chick : AnimalBase
             {
                 if ((parentCell.y == nextCell.y + 1 && nextCell.y <= 3) && parentCell.x == nextCell.x)
                 {
+                    if (nextCell.y == 0)
+                        Evolve(player);
                     return true;
                 }
                 else
@@ -46,10 +50,84 @@ public class Chick : AnimalBase
             else
                 return false;
         }
+
         else
-            return false;
+        {
+            parentCell = transform.parent.GetComponent<Cell>();
+            if (player == Player.player_one) //양옆/ 앞대각선// 
+            {
+                if ((nextCell.x >= 0 && nextCell.x <= 2 && nextCell.y >= 0 && nextCell.y <= 3))
+                {
+                    if (parentCell.y == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
+                    {
+                        return true;
+                    }
+                    else if (parentCell.x == nextCell.x && (parentCell.y == nextCell.y - 1 || parentCell.y == nextCell.y + 1))
+                    {
+                        return true;
+                    }
+                    else if (parentCell.y + 1 == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
+                    {
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+                else
+                    return false;
+            }
+
+            else if (player == Player.player_two)
+            {
+                if ((nextCell.x >= 0 && nextCell.x <= 2 && nextCell.y >= 0 && nextCell.y <= 3))
+                {
+                    if (parentCell.y == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
+                    {
+                        return true;
+                    }
+                    else if (parentCell.x == nextCell.x && (parentCell.y == nextCell.y - 1 || parentCell.y == nextCell.y + 1))
+                    {
+                        return true;
+                    }
+                    else if (parentCell.y - 1 == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
+                    {
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+                else
+                    return false;
+            }
+            else
+                return false;
+        }
+    }
+
+    private void Evolve(Player player)
+    {
+        isEvolve = true;
+        if (player == Player.player_one)
+        {
+            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("chickenOne");
+        }
+        else if (player == Player.player_two)
+        {
+            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("chickenTwo");
+        }
+    }
+
+    public void Degeneration()
+    {
+        isEvolve = false;
+        if (player == Player.player_one)
+        {
+            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("chickOne");
+        }
+        else if (player == Player.player_two)
+        {
+            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("chickTwo");
+        }
     }
 }
-
-
 

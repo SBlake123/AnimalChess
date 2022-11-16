@@ -7,7 +7,7 @@ public abstract class AnimalBase : MonoBehaviour
     public int x;
     public int y;
 
-    public GameObject parent;
+    public Cell parentCell;
     public Cell nextCell;
 
     public enum Player { player_one, player_two };
