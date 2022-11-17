@@ -42,6 +42,8 @@ MonoBehaviour:
   - AnimalMoveRPC
   - AnimalComeBackRPC
   - AnimalToInvenRPC
+  - DecidePlayerRPC
+  - DecideTurnRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

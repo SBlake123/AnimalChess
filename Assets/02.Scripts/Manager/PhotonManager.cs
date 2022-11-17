@@ -16,6 +16,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             instance = this;
         }
     }
+
     private void Start()
     {
         
@@ -29,7 +30,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.SerializationRate = 30;
         ConnectMasterServer();
     }
-
+    #region SERVER
     public void ConnectMasterServer()
     {
         print("마스터 서버 접속 시도");
@@ -59,7 +60,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         // 2명 참가 가능한 방
         PhotonNetwork.JoinRandomOrCreateRoom(null, 0, MatchmakingMode.FillRoom,
             null, null, null, new RoomOptions { MaxPlayers = 2 }, null);
-    }
+    }  
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
@@ -122,36 +123,58 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
         print("게임 씬으로 이동");
     }
+    #endregion
 
+    #region RPC
     public void AnimalMove(int parentCellx, int parentCelly, int nextCellx, int nextCelly)
     {
-        photonView.RPC(nameof(AnimalMoveRPC), RpcTarget.AllBuffered, parentCellx, parentCelly, nextCellx, nextCelly);
+        photonView.RPC(nameof(AnimalMoveRPC), RpcTarget.OthersBuffered, parentCellx, parentCelly, nextCellx, nextCelly);
     }
-    [PunRPC] public void AnimalMoveRPC(int parentCellx, int parentCelly, int nextCellx, int nextCelly)
+
+    [PunRPC]
+    private void AnimalMoveRPC(int parentCellx, int parentCelly, int nextCellx, int nextCelly)
     {
         FindObjectOfType<TouchManager>().AnimalMove(parentCellx, parentCelly, nextCellx, nextCelly);
     }
 
-    public void AnimalToInven(int parentCellx, int parentCelly, string tag)
+    public void AnimalToInven(int parentCellx, int parentCelly)
     {
-        photonView.RPC(nameof(AnimalToInvenRPC), RpcTarget.AllBuffered, parentCellx, parentCelly, tag);
+        photonView.RPC(nameof(AnimalToInvenRPC), RpcTarget.OthersBuffered , parentCellx, parentCelly);
     }
 
-    [PunRPC]
-    public void AnimalToInvenRPC(int parentCellx, int parentCelly, string tag)
+    [PunRPC] private void AnimalToInvenRPC(int parentCellx, int parentCelly)
     {
-        FindObjectOfType<TouchManager>().AnimalToInven(parentCellx, parentCelly, tag);
+        FindObjectOfType<TouchManager>().AnimalToInven(parentCellx, parentCelly);
     }
 
-    public void AnimalComeBack(Vector3 transform, string tag)
-    {
-        photonView.RPC(nameof(AnimalComeBackRPC), RpcTarget.AllBuffered, transform, tag); ;
+    public void AnimalComeBack(int invenCellx, int invenCelly, int parentCellx, int parentCelly)
+    { 
+        photonView.RPC(nameof(AnimalComeBackRPC), RpcTarget.OthersBuffered, invenCellx, invenCelly, parentCellx, parentCelly); 
     }
 
-    [PunRPC] public void AnimalComeBackRPC(Vector3 transform, string tag)
+    [PunRPC] public void AnimalComeBackRPC(int invenCellx, int invenCelly, int parentCellx, int parentCelly)
     {
-        FindObjectOfType<TouchManager>().AnimalComeBack(transform, tag);
+        FindObjectOfType<TouchManager>().AnimalComeBack(invenCellx, invenCelly, parentCellx, parentCelly);
     }
 
+    public void DecidePlayer(string player)
+    {
+        photonView.RPC(nameof(DecidePlayerRPC), RpcTarget.OthersBuffered, player);
+    }
 
+    [PunRPC] private void DecidePlayerRPC(string player)
+    {
+        FindObjectOfType<TurnManager>().DecidePlayer(player);
+    }
+
+    public void DecideTurn(string player)
+    {
+        photonView.RPC(nameof(DecideTurnRPC), RpcTarget.OthersBuffered, player);
+    }
+
+    [PunRPC] private void DecideTurnRPC(string player)
+    {
+        FindObjectOfType<TurnManager>().DecideTurn(player);
+    }
+    #endregion
 }
