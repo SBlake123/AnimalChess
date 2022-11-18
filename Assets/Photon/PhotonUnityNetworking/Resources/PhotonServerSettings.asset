@@ -44,6 +44,8 @@ MonoBehaviour:
   - AnimalToInvenRPC
   - DecidePlayerRPC
   - DecideTurnRPC
+  - LionDieRPC
+  - InvadeSuccessRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class Inventory : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class Inventory : MonoBehaviour
                 if(animalBase is Lion)
                 {
                     string player = (animalBase.player).ToString();
+                    PhotonManager.instance.LionDie(player);
                     WinManager.instance.LionDie(player);
                 }
                 break;

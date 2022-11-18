@@ -30,6 +30,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         PhotonNetwork.SerializationRate = 30;
         ConnectMasterServer();
     }
+
+    
     #region SERVER
     public void ConnectMasterServer()
     {
@@ -42,7 +44,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         base.OnConnectedToMaster();
         print("마스터 서버에 연결 완료");
-        OnJoinRandomRoomOrCreateRoom();
+        PhotonNetwork.LoadLevel(SSceneName.LOBBY_SCENE);
     }
 
     public override void OnDisconnected(DisconnectCause cause)
@@ -152,7 +154,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         photonView.RPC(nameof(AnimalComeBackRPC), RpcTarget.OthersBuffered, invenCellx, invenCelly, parentCellx, parentCelly); 
     }
 
-    [PunRPC] public void AnimalComeBackRPC(int invenCellx, int invenCelly, int parentCellx, int parentCelly)
+    [PunRPC] private void AnimalComeBackRPC(int invenCellx, int invenCelly, int parentCellx, int parentCelly)
     {
         FindObjectOfType<TouchManager>().AnimalComeBack(invenCellx, invenCelly, parentCellx, parentCelly);
     }
@@ -176,5 +178,16 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         FindObjectOfType<TurnManager>().DecideTurn(player);
     }
+
+    public void LionDie(string player)
+    {
+        photonView.RPC(nameof(LionDieRPC), RpcTarget.OthersBuffered, player);
+    }
+
+    [PunRPC] private void LionDieRPC(string player)
+    {
+        FindObjectOfType<WinManager>().LionDie(player);
+    }
+
     #endregion
 }

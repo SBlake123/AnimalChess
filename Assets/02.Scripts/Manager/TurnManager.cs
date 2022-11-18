@@ -46,6 +46,7 @@ public class TurnManager : MonoBehaviour
     public void DecideTurn(string player)
     {
         this.player = StringToEnum(player);
+        if (WinManager.instance.invadeSuccessCount == 1) WinManager.instance.turnOverCount++;
     }
 
     public void TurnOver()
@@ -56,6 +57,7 @@ public class TurnManager : MonoBehaviour
             player = Player.player_one;
 
         PhotonManager.instance.DecideTurn(player.ToString());
+        if (WinManager.instance.invadeSuccessCount == 1) WinManager.instance.turnOverCount++;
     }
 
     public bool MyTurn()

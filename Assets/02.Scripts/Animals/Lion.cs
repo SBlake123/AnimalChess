@@ -93,12 +93,17 @@ public class Lion : AnimalBase
             if (player == Player.player_one)
             {
                 if (nextCell.y == 3)
+                {
                     WinManager.instance.InvadeSuccess("player_one");
+                }
+
             }
             else if (player == Player.player_two)
             {
                 if (nextCell.y == 0)
+                {
                     WinManager.instance.InvadeSuccess("player_two");
+                }
             }
         }
     }

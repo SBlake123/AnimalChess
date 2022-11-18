@@ -13,5 +13,6 @@ public struct SAnimalName
 public struct SSceneName
 {
     public const string INIT_SCENE = "InitScene";
+    public const string LOBBY_SCENE = "LobbyScene";
     public const string MAIN_SCENE = "MainScene";
 }
