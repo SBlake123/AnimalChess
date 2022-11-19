@@ -189,5 +189,28 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         FindObjectOfType<WinManager>().LionDie(player);
     }
 
+    public void Evolve(string player)
+    {
+        photonView.RPC(nameof(EvolveRPC), RpcTarget.OthersBuffered, player);
+    }
+
+    [PunRPC] private void EvolveRPC(string player)
+    {
+        Chick[] chicklist = FindObjectsOfType<Chick>();
+        foreach (Chick item in chicklist)
+        {
+            item.DecideEvolve(player);
+        }
+    }
+
+    public void InvadeSuccess(string player)
+    {
+        photonView.RPC(nameof(InvadeSuccessRPC), RpcTarget.OthersBuffered, player);
+    }
+
+    [PunRPC] private void InvadeSuccessRPC(string player)
+    {
+        FindObjectOfType<WinManager>().InvadeSuccess(player);
+    }
     #endregion
 }

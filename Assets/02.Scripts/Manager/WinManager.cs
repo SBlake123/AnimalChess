@@ -8,6 +8,7 @@ public class WinManager : MonoBehaviour
 {
     public static WinManager instance;
     public string invadeSuccessPlayer;
+    public bool lionDie;
     public int invadeSuccessCount;
     public int turnOverCount;
     public GameObject canvas;
@@ -17,6 +18,11 @@ public class WinManager : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        invadeSuccessPlayer = "None";
+    }
+
     private void Update()
     {
         InvadeWin(turnOverCount, invadeSuccessPlayer);
@@ -24,28 +30,33 @@ public class WinManager : MonoBehaviour
 
     public void LionDie(string player)
     {
-        Debug.Log($"{player} Win!");
-        canvas.SetActive(true);
-        TextMeshProUGUI tMUGUI = canvas.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-        tMUGUI.text = ($"{player} Win!");
-        Time.timeScale = 0f;
+        lionDie = true;
+        CanvasActive(player);
     }
 
     public void InvadeSuccess(string player)
     {
-        invadeSuccessCount = 1;
-        invadeSuccessPlayer = player;
+        if (invadeSuccessPlayer == "None")
+        {
+            invadeSuccessCount = 1;
+            invadeSuccessPlayer = player;
+        }
     }
 
     private void InvadeWin(int turnOverCount, string player)
     {
-        if(turnOverCount == 2)
+        if (turnOverCount >= 1 && !lionDie)
         {
-            canvas.SetActive(true);
-            TextMeshProUGUI tMUGUI = canvas.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-            tMUGUI.text = ($"{player} Win!");
-            Time.timeScale = 0f;
+            CanvasActive(player);
         }
+    }
+
+    private void CanvasActive(string player)
+    {
+        canvas.SetActive(true);
+        TextMeshProUGUI tMUGUI = canvas.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
+        tMUGUI.text = ($"{player} Win!");
+        Time.timeScale = 0f;
     }
 
 }

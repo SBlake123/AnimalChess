@@ -95,6 +95,7 @@ public class Lion : AnimalBase
                 if (nextCell.y == 3)
                 {
                     WinManager.instance.InvadeSuccess("player_one");
+                    PhotonManager.instance.InvadeSuccess("player_one");
                 }
 
             }
@@ -103,6 +104,7 @@ public class Lion : AnimalBase
                 if (nextCell.y == 0)
                 {
                     WinManager.instance.InvadeSuccess("player_two");
+                    PhotonManager.instance.InvadeSuccess("player_two");
                 }
             }
         }

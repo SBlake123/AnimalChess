@@ -25,10 +25,8 @@ public class TurnManager : MonoBehaviour
         {
             me = UnityEngine.Random.Range(0, 2) == 0 ? Player.player_one : Player.player_two;
             string enemy = me == Player.player_one ? (Player.player_two).ToString() : (Player.player_one).ToString();
-            Debug.Log(enemy);
             PhotonManager.instance.DecidePlayer(enemy);
         }
-        Debug.Log(PhotonNetwork.IsMasterClient);
         tMPUGUI.text = me.ToString();
     }
 

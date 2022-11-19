@@ -82,14 +82,14 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: f5a4a23030aa2bb4d9ff3fca599f0a73, type: 3}
-  m_Color: {r: 0.41509432, g: 0.38141686, b: 0.38141686, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!65 &1456411520872438449
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   y: 0
-  parent: {fileID: 0}
+  parentCell: {fileID: 0}
   nextCell: {fileID: 0}
   player: 0
 --- !u!222 &1456411520872438454

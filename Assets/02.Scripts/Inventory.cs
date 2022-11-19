@@ -15,11 +15,13 @@ public class Inventory : MonoBehaviour
             {
                 animalBase.transform.position = transforms[i].transform.position + new Vector3(0, 0, -0.1f);
                 animalBase.transform.SetParent(transforms[i].transform);
+                animalBase.transform.localScale *= 0.5f;
                 if(animalBase is Lion)
                 {
                     string player = (animalBase.player).ToString();
                     PhotonManager.instance.LionDie(player);
                     WinManager.instance.LionDie(player);
+                    Debug.Log("animalBase is Lion");
                 }
                 break;
             }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class Chick : AnimalBase
 
     public override void ImageChange()
     {
+        isEvolve = false;
         if (player == Player.player_one)
             transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("chickOne");
         else
@@ -29,7 +31,10 @@ public class Chick : AnimalBase
                 if ((parentCell.y == nextCell.y - 1 && nextCell.y >= 0) && parentCell.x == nextCell.x)
                 {
                     if (nextCell.y == 3)
+                    {
                         Evolve(player);
+                        PhotonManager.instance.Evolve(player.ToString());
+                    }
                     return true;
                 }
                 else
@@ -41,7 +46,10 @@ public class Chick : AnimalBase
                 if ((parentCell.y == nextCell.y + 1 && nextCell.y <= 3) && parentCell.x == nextCell.x)
                 {
                     if (nextCell.y == 0)
+                    {
                         Evolve(player);
+                        PhotonManager.instance.Evolve(player.ToString());
+                    }
                     return true;
                 }
                 else
@@ -104,6 +112,20 @@ public class Chick : AnimalBase
         }
     }
 
+    public Player StringToEnum(string str)
+    {
+        return (Player)Enum.Parse(typeof(Player), str);
+    }
+
+    public void DecideEvolve(string player)
+    {
+        if (this.transform.tag == "ANIMAL" && this.player.ToString() == player.ToString())
+        {
+            Player me = StringToEnum(player);
+            Evolve(me);
+        }
+    }
+
     private void Evolve(Player player)
     {
         isEvolve = true;
@@ -114,19 +136,6 @@ public class Chick : AnimalBase
         else if (player == Player.player_two)
         {
             transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("chickenTwo");
-        }
-    }
-
-    public void Degeneration()
-    {
-        isEvolve = false;
-        if (player == Player.player_one)
-        {
-            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("chickOne");
-        }
-        else if (player == Player.player_two)
-        {
-            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("chickTwo");
         }
     }
 }
