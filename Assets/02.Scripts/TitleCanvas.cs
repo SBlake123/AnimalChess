@@ -11,6 +11,7 @@ public class TitleCanvas : MonoBehaviour
         if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
         {          
             loginCanvas.SetActive(true);
+            loginCanvas.GetComponent<Canvas>().enabled = true;
             this.gameObject.SetActive(false);
         }
     }

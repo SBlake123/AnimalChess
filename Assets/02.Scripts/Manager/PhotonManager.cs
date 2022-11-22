@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 using System;
 
 public class PhotonManager : MonoBehaviourPunCallbacks
@@ -44,6 +45,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         base.OnConnectedToMaster();
         print("마스터 서버에 연결 완료");
+
+        if(!(SceneManager.GetActiveScene().name == SSceneName.LOBBY_SCENE))
         PhotonNetwork.LoadLevel(SSceneName.LOBBY_SCENE);
     }
 
@@ -56,7 +59,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);
-        print("연결 끊김. 방으로 이동.\n" +
+        print("연결 끊김. 로비로 이동.\n" +
             $"이유 [{cause}]");
 
     }
@@ -86,9 +89,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
             $"메세지 : {message}");
     }
 
-    public override void OnCreatedRoom()
+    public void OnCreatedRoom(string roomName)
     {
-        base.OnCreatedRoom();
+        PhotonNetwork.CreateRoom(roomName == "" ? $"{PhotonNetwork.LocalPlayer.NickName}'s Room" : roomName , new RoomOptions { MaxPlayers = 2 });
         print("방 생성 완료");
     }
 
@@ -97,14 +100,6 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
         print("방 참가 완료");
-    }
-
-    public void LeaveRoom()
-    {
-        print("방 떠나기 시도");
-
-        Debug.Assert(PhotonNetwork.InRoom == true);
-        PhotonNetwork.LeaveRoom();
     }
 
     public override void OnLeftRoom()

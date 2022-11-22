@@ -47,6 +47,8 @@ MonoBehaviour:
   - LionDieRPC
   - InvadeSuccessRPC
   - EvolveRPC
+  - AvatarActive
+  - RoomRenewalRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
