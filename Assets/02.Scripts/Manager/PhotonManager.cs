@@ -19,7 +19,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        
+        Screen.SetResolution(960, 540, false);
         DontDestroyOnLoad(this);
         // 호스트가 씬을 이동할 때, 다른 클라이언트들도 씬을 이동하게 하면서 동시에, 씬을 동기화시켜줌.
         // (서로 씬이 달라서 같은 포톤 뷰 개체를 못 찾아서 RPC함수 호출이 씹히는 문제를 막을 수 있음[RPC 손실 방지])
@@ -45,6 +45,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         base.OnConnectedToMaster();
         print("마스터 서버에 연결 완료");
         PhotonNetwork.LoadLevel(SSceneName.LOBBY_SCENE);
+    }
+
+    public void OnJoinedLobby(string text)
+    {
+        base.OnJoinedLobby();
+        PhotonNetwork.LocalPlayer.NickName = text;
     }
 
     public override void OnDisconnected(DisconnectCause cause)
