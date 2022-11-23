@@ -15,7 +15,6 @@ public class RoomList : MonoBehaviourPunCallbacks
 
     private int currentPage = 1, maxPage, multiple;
 
-
     public void RoomListRenewal()
     {
         maxPage = (roomList.Count % cellBtn.Length == 0) ? roomList.Count / cellBtn.Length : (roomList.Count / cellBtn.Length) + 1;
@@ -27,7 +26,7 @@ public class RoomList : MonoBehaviourPunCallbacks
         {
             cellBtn[i].interactable = (multiple + i < roomList.Count) ? true : false;
             cellBtn[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (multiple + i < roomList.Count) ? roomList[multiple +i].Name : "";
-            cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = (multiple + i < roomList.Count) ? "Waiting" : "FULL";
+            cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = (multiple + i < roomList.Count) ? "Waiting" : "";
 
             if(cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text == "Waiting")
             {
@@ -44,22 +43,28 @@ public class RoomList : MonoBehaviourPunCallbacks
     {
         if (num == -2) --currentPage;
         else if (num == -1) ++currentPage;
-        else PhotonNetwork.JoinRoom(roomList[multiple + num].Name);
+        else
+        {
+            Debug.Log("Room Click");
+            PhotonNetwork.JoinRoom(roomList[multiple + num].Name);
+
+        }
 
         RoomListRenewal();
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        Debug.Log("RoomListUpdate");
         int roomCount = roomList.Count;
         for (int i = 0; i < roomCount; i++)
         {
             if (!roomList[i].RemovedFromList)
             {
                 if (this.roomList.Contains(roomList[i]))
-                    this.roomList.Add(roomList[i]);
+                    continue;
                 else
-                    this.roomList[this.roomList.IndexOf(roomList[i])] = roomList[i];
+                    this.roomList.Add(roomList[i]);
             }
             else if (this.roomList.IndexOf(roomList[i]) != -1)
                 this.roomList.RemoveAt(this.roomList.IndexOf(roomList[i]));

@@ -32,12 +32,12 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         ConnectMasterServer();
     }
 
-    
+
     #region SERVER
     public void ConnectMasterServer()
     {
         print("마스터 서버 접속 시도");
-        
+
         PhotonNetwork.ConnectUsingSettings();
     }
 
@@ -46,15 +46,18 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         base.OnConnectedToMaster();
         print("마스터 서버에 연결 완료");
 
-        if(!(SceneManager.GetActiveScene().name == SSceneName.LOBBY_SCENE))
-        PhotonNetwork.LoadLevel(SSceneName.LOBBY_SCENE);
+        if (!(SceneManager.GetActiveScene().name == SSceneName.LOBBY_SCENE))
+            PhotonNetwork.LoadLevel(SSceneName.LOBBY_SCENE);
+        else
+            PhotonNetwork.JoinLobby();
     }
 
-    public void OnJoinedLobby(string text)
-    {
-        base.OnJoinedLobby();
-        PhotonNetwork.LocalPlayer.NickName = text;
-    }
+    //public void OnJoinedLobby(string text)
+    //{
+    //    base.OnJoinedLobby();
+    //    Debug.Log("로비 접속 완료");
+    //    PhotonNetwork.LocalPlayer.NickName = text;
+    //}
 
     public override void OnDisconnected(DisconnectCause cause)
     {
@@ -64,71 +67,72 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     }
 
-    public void OnJoinRandomRoomOrCreateRoom()
-    {
-        print("방 참가 혹은 생성");
+    //public void OnJoinRandomRoomOrCreateRoom()
+    //{
+    //    print("방 참가 혹은 생성");
 
-        // 2명 참가 가능한 방
-        PhotonNetwork.JoinRandomOrCreateRoom(null, 0, MatchmakingMode.FillRoom,
-            null, null, null, new RoomOptions { MaxPlayers = 2 }, null);
-    }  
+    //    // 2명 참가 가능한 방
+    //    PhotonNetwork.JoinRandomOrCreateRoom(null, 0, MatchmakingMode.FillRoom,
+    //        null, null, null, new RoomOptions { MaxPlayers = 2 }, null);
+    //}
 
-    public override void OnCreateRoomFailed(short returnCode, string message)
-    {
-        base.OnCreateRoomFailed(returnCode, message);
-        Debug.Log("방 생성 실패 :\n" +
-            $"코드 : {returnCode}\n" +
-            $"메세지 : {message}");
-    }
+    //public override void OnCreateRoomFailed(short returnCode, string message)
+    //{
+    //    base.OnCreateRoomFailed(returnCode, message);
+    //    Debug.Log("방 생성 실패 :\n" +
+    //        $"코드 : {returnCode}\n" +
+    //        $"메세지 : {message}");
+    //}
 
-    public override void OnJoinRandomFailed(short returnCode, string message)
-    {
-        base.OnJoinRandomFailed(returnCode, message);
-        Debug.Log("방 참가 실패 :\n" +
-            $"코드 : {returnCode}\n" +
-            $"메세지 : {message}");
-    }
+    //public override void OnJoinRandomFailed(short returnCode, string message)
+    //{
+    //    base.OnJoinRandomFailed(returnCode, message);
+    //    Debug.Log("방 참가 실패 :\n" +
+    //        $"코드 : {returnCode}\n" +
+    //        $"메세지 : {message}");
+    //}
 
-    public void OnCreatedRoom(string roomName)
-    {
-        PhotonNetwork.CreateRoom(roomName == "" ? $"{PhotonNetwork.LocalPlayer.NickName}'s Room" : roomName , new RoomOptions { MaxPlayers = 2 });
-        print("방 생성 완료");
-    }
+    //public void OnCreatedRoom(string roomName)
+    //{
+    //    PhotonNetwork.CreateRoom(roomName == "" ? $"{PhotonNetwork.LocalPlayer.NickName}'s Room" : roomName, new RoomOptions { MaxPlayers = 2, IsVisible = true });
+    //    print("방 생성 완료");
+    //}
 
-    // OnCreateRoom 함수 호출 뒤 이곳으로 들어옴
-    public override void OnJoinedRoom()
-    {
-        base.OnJoinedRoom();
-        print("방 참가 완료");
-    }
+    //// OnCreateRoom 함수 호출 뒤 이곳으로 들어옴
+    //public override void OnJoinedRoom()
+    //{
+    //    base.OnJoinedRoom();
+    //    print("방 참가 완료");
 
-    public override void OnLeftRoom()
-    {
-        base.OnLeftRoom();
-        print("방 떠남, 자동으로 게임 서버 연결 해제 후 마스터 서버 접속 시도..");
-    }
+    //}
 
-    public override void OnPlayerLeftRoom(Player otherPlayer)
-    {
-        base.OnPlayerLeftRoom(otherPlayer);
-        print($"{otherPlayer.NickName}가 떠남");
-    }
+    //public override void OnLeftRoom()
+    //{
+    //    base.OnLeftRoom();
+    //    print("방 떠남, 자동으로 게임 서버 연결 해제 후 마스터 서버 접속 시도..");
+    //}
+
+    //public override void OnPlayerLeftRoom(Player otherPlayer)
+    //{
+    //    base.OnPlayerLeftRoom(otherPlayer);
+    //    print($"{otherPlayer.NickName}가 떠남");
+    //}
 
 
-    public override void OnPlayerEnteredRoom(Player newPlayer)
-    {
-        base.OnPlayerEnteredRoom(newPlayer);
-        print($"{newPlayer.NickName}가 방에 참가");
+    //public override void OnPlayerEnteredRoom(Player newPlayer)
+    //{
+    //    base.OnPlayerEnteredRoom(newPlayer);
+    //    print($"{newPlayer.NickName}가 방에 참가");
 
-        // 게임 시작 후에는 유저가 못 들어옴 (게임 종료 후, 유저 나가면 다른 유저 들어오는 것 방지)
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.LoadLevel(SSceneName.MAIN_SCENE);
+    //    // 게임 시작 후에는 유저가 못 들어옴 (게임 종료 후, 유저 나가면 다른 유저 들어오는 것 방지)
+    //    PhotonNetwork.CurrentRoom.IsOpen = false;
+    //    PhotonNetwork.LoadLevel(SSceneName.MAIN_SCENE);
 
-        print("게임 씬으로 이동");
-    }
+    //    print("게임 씬으로 이동");
+    //}
     #endregion
 
-    #region RPC
+    #region IngameRPC
     public void AnimalMove(int parentCellx, int parentCelly, int nextCellx, int nextCelly)
     {
         photonView.RPC(nameof(AnimalMoveRPC), RpcTarget.OthersBuffered, parentCellx, parentCelly, nextCellx, nextCelly);
@@ -142,20 +146,22 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
     public void AnimalToInven(int parentCellx, int parentCelly)
     {
-        photonView.RPC(nameof(AnimalToInvenRPC), RpcTarget.OthersBuffered , parentCellx, parentCelly);
+        photonView.RPC(nameof(AnimalToInvenRPC), RpcTarget.OthersBuffered, parentCellx, parentCelly);
     }
 
-    [PunRPC] private void AnimalToInvenRPC(int parentCellx, int parentCelly)
+    [PunRPC]
+    private void AnimalToInvenRPC(int parentCellx, int parentCelly)
     {
         FindObjectOfType<TouchManager>().AnimalToInven(parentCellx, parentCelly);
     }
 
     public void AnimalComeBack(int invenCellx, int invenCelly, int parentCellx, int parentCelly)
-    { 
-        photonView.RPC(nameof(AnimalComeBackRPC), RpcTarget.OthersBuffered, invenCellx, invenCelly, parentCellx, parentCelly); 
+    {
+        photonView.RPC(nameof(AnimalComeBackRPC), RpcTarget.OthersBuffered, invenCellx, invenCelly, parentCellx, parentCelly);
     }
 
-    [PunRPC] private void AnimalComeBackRPC(int invenCellx, int invenCelly, int parentCellx, int parentCelly)
+    [PunRPC]
+    private void AnimalComeBackRPC(int invenCellx, int invenCelly, int parentCellx, int parentCelly)
     {
         FindObjectOfType<TouchManager>().AnimalComeBack(invenCellx, invenCelly, parentCellx, parentCelly);
     }
@@ -165,7 +171,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         photonView.RPC(nameof(DecidePlayerRPC), RpcTarget.OthersBuffered, player);
     }
 
-    [PunRPC] private void DecidePlayerRPC(string player)
+    [PunRPC]
+    private void DecidePlayerRPC(string player)
     {
         FindObjectOfType<TurnManager>().DecidePlayer(player);
     }
@@ -175,7 +182,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         photonView.RPC(nameof(DecideTurnRPC), RpcTarget.OthersBuffered, player);
     }
 
-    [PunRPC] private void DecideTurnRPC(string player)
+    [PunRPC]
+    private void DecideTurnRPC(string player)
     {
         FindObjectOfType<TurnManager>().DecideTurn(player);
     }
@@ -185,7 +193,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         photonView.RPC(nameof(LionDieRPC), RpcTarget.OthersBuffered, player);
     }
 
-    [PunRPC] private void LionDieRPC(string player)
+    [PunRPC]
+    private void LionDieRPC(string player)
     {
         FindObjectOfType<WinManager>().LionDie(player);
     }
@@ -195,7 +204,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         photonView.RPC(nameof(EvolveRPC), RpcTarget.OthersBuffered, player);
     }
 
-    [PunRPC] private void EvolveRPC(string player)
+    [PunRPC]
+    private void EvolveRPC(string player)
     {
         Chick[] chicklist = FindObjectsOfType<Chick>();
         foreach (Chick item in chicklist)
@@ -209,7 +219,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         photonView.RPC(nameof(InvadeSuccessRPC), RpcTarget.OthersBuffered, player);
     }
 
-    [PunRPC] private void InvadeSuccessRPC(string player)
+    [PunRPC]
+    private void InvadeSuccessRPC(string player)
     {
         FindObjectOfType<WinManager>().InvadeSuccess(player);
     }

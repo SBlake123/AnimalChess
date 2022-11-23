@@ -13,7 +13,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
     [Header("Button")]
     public Button nickNameBtn;
     public Button makeARoomBtn;
-    public Button joinBtn;
+    public Button leaveBtn;
     public Button bToLobbyBtn;
     public Button playBtn;
 
@@ -57,7 +57,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
 
         nickNameBtn.onClick.AddListener(JoinLobby);
         makeARoomBtn.onClick.AddListener(MakeARoom);
-        joinBtn.onClick.AddListener(JoinARoom);
+        leaveBtn.onClick.AddListener(LeaveLobby);
         bToLobbyBtn.onClick.AddListener(BackToLobby);
         playBtn.onClick.AddListener(StartGame);
     }
@@ -70,42 +70,77 @@ public class LobbyScene : MonoBehaviourPunCallbacks
 
     private void JoinLobby()
     {
+        PhotonNetwork.JoinLobby();
         loginCanvas.enabled = false;
         roomListCanvas.enabled = true;
 
-        if (nickNameInput.text.Length > 6)
+        if (nickNameInput.text.Length > 6 || nickNameInput.text == "")
         {
             nickNameInput.text = animalArray[UnityEngine.Random.Range(0, animalArray.Length)];
-            PhotonManager.instance.OnJoinedLobby(nickNameInput.text);
+            PhotonNetwork.LocalPlayer.NickName = nickNameInput.text;
         }
         else
-            PhotonManager.instance.OnJoinedLobby(nickNameInput.text);
+            PhotonNetwork.LocalPlayer.NickName = nickNameInput.text;
 
         greetingText.text = $"Hello! {PhotonNetwork.LocalPlayer.NickName}!";
     }
 
-    private void JoinARoom()
+    public override void OnJoinedLobby()
+    {
+        roomList.roomList.Clear();
+    }
+
+    private void LeaveLobby()
     {
         roomListCanvas.enabled = false;
-        inRoomCanvas.enabled = true;
-        roomList.RoomListRenewal();
-        PhotonManager.instance.OnJoinedRoom();
+        loginCanvas.enabled = true;
+        PhotonNetwork.LeaveLobby();
     }
 
     private void MakeARoom()
     {
-        PhotonManager.instance.OnCreatedRoom(roomNameInput.text);
+        OnCreatedRoom(roomNameInput.text);
+        if (roomNameInput.text == "")
+            roomNameInput.text = $"{nickNameInput.text}'s Room";
+
         roomListCanvas.enabled = false;
         inRoomCanvas.enabled = true;
+
         roomTitleText.text = roomNameInput.text;
         masterName.text = nickNameInput.text;
         masterAvatar.SetActive(true);
-        roomList.RoomListRenewal();
+    }
+
+
+    public void OnCreatedRoom(string roomName)
+    {
+        PhotonNetwork.CreateRoom(roomName == "" ? $"{PhotonNetwork.LocalPlayer.NickName}'s Room" : roomName, new RoomOptions { MaxPlayers = 2, IsVisible = true });
+        print("LobbyScene. 방 생성 완료");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        base.OnJoinedRoom();
+        roomListCanvas.enabled = false;
+        inRoomCanvas.enabled = true;
+        RoomRenewal();
+        print("LobbyScene. 방 참가 완료");
+    }
+
+    public override void OnLeftRoom()
+    {
+        base.OnLeftRoom();
+        JoinLobby();
+        print("LobbyScene. 방을 떠나 로비로 돌아옴");
     }
 
     private void StartGame()
     {
-        
+        if(PhotonNetwork.CurrentRoom.PlayerCount == 2 && PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.LoadLevel(SSceneName.MAIN_SCENE);
+        }
     }
 
     private void BackToLobby()
@@ -115,28 +150,56 @@ public class LobbyScene : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
     }
 
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        base.OnCreateRoomFailed(returnCode, message);
+        Debug.Log("방 생성 실패 :\n" +
+            $"코드 : {returnCode}\n" +
+            $"메세지 : {message}");
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        base.OnJoinRandomFailed(returnCode, message);
+        Debug.Log("방 참가 실패 :\n" +
+            $"코드 : {returnCode}\n" +
+            $"메세지 : {message}");
+    }
+
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        photonView.RPC(nameof(RoomRenewalRPC), RpcTarget.AllBuffered);
-        photonView.RPC(nameof(AvatarActive), RpcTarget.AllBuffered, true);
+        Debug.Log("OnPlayerEnteredRoom LobbyScene");
+        RoomRenewal();
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        photonView.RPC(nameof(RoomRenewalRPC), RpcTarget.AllBuffered);
-        photonView.RPC(nameof(AvatarActive), RpcTarget.AllBuffered, false);
+        Debug.Log("OnPlayerLeftRoom LobbyScene");
+        RoomRenewal();
     }
 
-    [PunRPC] private void RoomRenewalRPC()
+    private void RoomRenewal()
     {
-        nonMasterName.text = "";
-        for (int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-            nonMasterName.text = PhotonNetwork.PlayerList[i].NickName;
+        Debug.Log("RoomRenewal");
+        masterAvatar.SetActive(true);
         masterName.text = PhotonNetwork.MasterClient.NickName;
+        roomTitleText.text = PhotonNetwork.CurrentRoom.Name;
+
+        for(int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
+        {
+            if(PhotonNetwork.PlayerList.Length == 2)
+            {
+                nonMasterName.text = PhotonNetwork.PlayerList[1].NickName;
+                nonMasterAvatar.SetActive(true);
+            }
+            else
+            {
+                nonMasterName.text = "";
+                nonMasterAvatar.SetActive(false);
+            }
+        }
+        
     }
 
-    [PunRPC] private void AvatarActive(bool selected)
-    {
-        nonMasterAvatar.SetActive(selected);
-    }
 }

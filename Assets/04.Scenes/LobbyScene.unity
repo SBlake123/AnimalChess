@@ -6456,7 +6456,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nickNameBtn: {fileID: 1950683382}
   makeARoomBtn: {fileID: 1509719644}
-  joinBtn: {fileID: 2087944667}
+  leaveBtn: {fileID: 2087944667}
   bToLobbyBtn: {fileID: 1533678719}
   playBtn: {fileID: 2038128481}
   roomList: {fileID: 812993163}
@@ -6718,7 +6718,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: JOIN
+  m_text: Leave
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3332af26dfc4d1448afd959a5df0e5fb, type: 2}
   m_sharedMaterial: {fileID: -5769717138218516191, guid: 3332af26dfc4d1448afd959a5df0e5fb, type: 2}
@@ -8232,7 +8232,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1411560049}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 0}
@@ -11231,7 +11231,7 @@ GameObject:
   - component: {fileID: 2087944668}
   - component: {fileID: 2087944667}
   m_Layer: 0
-  m_Name: JOIN
+  m_Name: LEAVE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
