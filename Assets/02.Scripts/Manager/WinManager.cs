@@ -55,8 +55,15 @@ public class WinManager : MonoBehaviour
     {
         canvas.SetActive(true);
         TextMeshProUGUI tMUGUI = canvas.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
-        tMUGUI.text = ($"{player} Win!");
-        Time.timeScale = 0f;
+        if(player == (TurnManager.Player.player_one).ToString())
+        {
+            tMUGUI.text = ($"{TurnManager.instance.playerArray[0]} Win!");
+        }
+        else if(player == (TurnManager.Player.player_two).ToString())
+        {
+            tMUGUI.text = ($"{TurnManager.instance.playerArray[1]} Win!");
+        }
+        TurnManager.instance.me = TurnManager.Player.none;
     }
 
 }

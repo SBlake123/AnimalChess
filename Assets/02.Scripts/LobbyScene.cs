@@ -45,7 +45,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
 
     [Header("Animal Array")]
     public string[] animalArray = new string[] { "COW", "DOG", "PAPAGO", "MOMO", "DIDI", "KIKI" };
-    // Start is called before the first frame update
+    
     void Start()
     {
         loadingCanvas.enabled = false;
@@ -61,12 +61,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
         bToLobbyBtn.onClick.AddListener(BackToLobby);
         playBtn.onClick.AddListener(StartGame);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    #region SERVER
 
     private void JoinLobby()
     {
@@ -110,7 +105,6 @@ public class LobbyScene : MonoBehaviourPunCallbacks
         masterName.text = nickNameInput.text;
         masterAvatar.SetActive(true);
     }
-
 
     public void OnCreatedRoom(string roomName)
     {
@@ -199,7 +193,6 @@ public class LobbyScene : MonoBehaviourPunCallbacks
                 nonMasterAvatar.SetActive(false);
             }
         }
-        
     }
-
+    #endregion
 }

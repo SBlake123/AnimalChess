@@ -8,9 +8,13 @@ using TMPro;
 public class TurnManager : MonoBehaviour
 {
     public static TurnManager instance;
-    public TextMeshProUGUI tMPUGUI;
+    public TextMeshProUGUI turnText;
+    public TextMeshProUGUI masterText;
+    public TextMeshProUGUI clientText;
 
-    public enum Player { player_one, player_two};
+    public string[] playerArray = new string[2];
+
+    public enum Player { player_one, player_two, none};
     public Player player;
     public Player me;
 
@@ -21,13 +25,46 @@ public class TurnManager : MonoBehaviour
 
     private void Start()
     {
-        if(PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
         {
             me = UnityEngine.Random.Range(0, 2) == 0 ? Player.player_one : Player.player_two;
             string enemy = me == Player.player_one ? (Player.player_two).ToString() : (Player.player_one).ToString();
             PhotonManager.instance.DecidePlayer(enemy);
         }
-        tMPUGUI.text = me.ToString();
+        turnText.text = me.ToString();
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (me == Player.player_one)
+            {
+                masterText.text = PhotonNetwork.PlayerList[0].NickName;
+                clientText.text = PhotonNetwork.PlayerList[1].NickName;
+
+                playerArray[0] = masterText.text;
+                playerArray[1] = clientText.text;
+            }
+            else
+            {
+                masterText.text = PhotonNetwork.PlayerList[1].NickName;
+                clientText.text = PhotonNetwork.PlayerList[0].NickName;
+
+                playerArray[0] = masterText.text;
+                playerArray[1] = clientText.text;
+            }
+
+            PhotonManager.instance.NameTransfer(masterText.text, clientText.text, playerArray[0], playerArray[1]);
+            turnText.text = $"{masterText.text}'s Turn";
+        }
+        
+    }
+
+    public void NameTransfer(string oneName, string twoName, string arrayOne, string arrayTwo)
+    {
+        masterText.text = oneName;
+        clientText.text = twoName;
+        playerArray[0] = arrayOne;
+        playerArray[1] = arrayTwo;
+        turnText.text = $"{masterText.text}'s Turn";
     }
 
     public Player StringToEnum(string str)
@@ -38,21 +75,30 @@ public class TurnManager : MonoBehaviour
     public void DecidePlayer(string player)
     {
         me = StringToEnum(player);
-        tMPUGUI.text = me.ToString();
     }
 
     public void DecideTurn(string player)
     {
         this.player = StringToEnum(player);
+        if(this.player == Player.player_one)
+            turnText.text = $"{masterText.text}'s Turn";
+        else
+            turnText.text = $"{clientText.text}'s Turn";
         if (WinManager.instance.invadeSuccessCount == 1) WinManager.instance.turnOverCount++;
     }
 
     public void TurnOver()
     {
         if (player == Player.player_one)
+        {
             player = Player.player_two;
+            turnText.text = $"{clientText.text}'s Turn";
+        }             
         else
+        {
             player = Player.player_one;
+            turnText.text = $"{masterText.text}'s Turn";
+        }
 
         PhotonManager.instance.DecideTurn(player.ToString());
         if (WinManager.instance.invadeSuccessCount == 1) WinManager.instance.turnOverCount++;
@@ -61,6 +107,11 @@ public class TurnManager : MonoBehaviour
     public bool MyTurn()
     {
         return player == me;
+    }
+
+    public void BackToLobby()
+    {
+        
     }
     //내 턴일때만 입력이 가능하다. 턴은 계속 바뀐다.
 }

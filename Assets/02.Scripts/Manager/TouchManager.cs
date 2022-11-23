@@ -137,6 +137,7 @@ public class TouchManager : MonoBehaviour
                                     selectAnimalBase = null;
                                     TurnManager.instance.TurnOver();
                                 }
+
                                 else
                                 {
                                     selectAnimal = null;
