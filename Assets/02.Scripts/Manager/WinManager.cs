@@ -21,7 +21,7 @@ public class WinManager : MonoBehaviour
     private void Start()
     {
         invadeSuccessPlayer = "None";
-    }
+    }   
 
     private void Update()
     {
