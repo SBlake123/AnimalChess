@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Giraffe : AnimalBase
+public class Dog : AnimalBase
 {
     public void Start()
     {
