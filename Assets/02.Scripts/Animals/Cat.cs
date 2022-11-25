@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Elephant : AnimalBase
+public class Cat : AnimalBase
 {
     public void Start()
     {
