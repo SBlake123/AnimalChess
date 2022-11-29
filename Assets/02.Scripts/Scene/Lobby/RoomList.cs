@@ -28,13 +28,31 @@ public class RoomList : MonoBehaviourPunCallbacks
             cellBtn[i].transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = (multiple + i < roomList.Count) ? roomList[multiple +i].Name : "";
             cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = (multiple + i < roomList.Count) ? "Waiting" : "";
 
+            if(cellBtn[i].interactable)
+            {
+                int k = i;
+                if (roomList[k].PlayerCount == 2)
+                {
+                    Debug.Log("FULL");
+                    cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "FULL";
+                }
+
+                if(roomList[k].IsOpen == false)
+                {
+                    cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Playing";
+                    cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = new Color(212 / 255f, 59 / 255f, 19 / 255f, 255 / 255f);
+                }
+            }
+
+
             if(cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text == "Waiting")
             {
-                cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = Color.HSVToRGB(41, 190, 0);
+                Debug.Log("Waiting Color Change");
+                cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = new Color(41 / 255f, 190 / 255f, 0 / 255f, 255 / 255f);
             }
             else if (cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().text == "FULL")
             {
-                cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = Color.HSVToRGB(212, 59, 19);
+                cellBtn[i].transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = new Color(212 / 255f, 59 / 255f, 19 / 255f, 255 / 255f);
             }
         }
     } 

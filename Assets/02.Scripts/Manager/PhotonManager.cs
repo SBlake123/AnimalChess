@@ -10,6 +10,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 {
     public static PhotonManager instance;
 
+    public bool backToLfromIn;
+
     private void Awake()
     {
         if (instance == null)

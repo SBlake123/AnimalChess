@@ -111,7 +111,7 @@ public class TurnManager : MonoBehaviour
 
     public void BackToLobby()
     {
-        
+        PhotonManager.instance.backToLfromIn = true;
+        PhotonNetwork.LoadLevel(SSceneName.LOBBY_SCENE);
     }
-    //내 턴일때만 입력이 가능하다. 턴은 계속 바뀐다.
 }

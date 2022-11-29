@@ -5,6 +5,12 @@ using UnityEngine;
 public class TitleCanvas : MonoBehaviour
 {
     public GameObject loginCanvas;
+
+    private void Start()
+    {
+        if (PhotonManager.instance.backToLfromIn)
+            this.gameObject.SetActive(false);
+    }
     // Update is called once per frame
     void Update()
     {

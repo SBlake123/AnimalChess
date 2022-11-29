@@ -60,6 +60,13 @@ public class LobbyScene : MonoBehaviourPunCallbacks
         leaveBtn.onClick.AddListener(LeaveLobby);
         bToLobbyBtn.onClick.AddListener(BackToLobby);
         playBtn.onClick.AddListener(StartGame);
+
+        if(PhotonManager.instance.backToLfromIn)
+        {
+            inRoomCanvas.enabled = true;
+            RoomRenewal();
+            PhotonManager.instance.backToLfromIn = false;
+        }
     }
     #region SERVER
 
