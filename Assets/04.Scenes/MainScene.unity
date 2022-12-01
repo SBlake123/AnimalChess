@@ -1109,6 +1109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   y: 0
+  coord: 
 --- !u!1 &473201939
 GameObject:
   m_ObjectHideFlags: 0
@@ -1157,6 +1158,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 2
   y: 1
+  coord: 
 --- !u!65 &473201942
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1369,6 +1371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 2
   y: 2
+  coord: 
 --- !u!65 &511067935
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1843,6 +1846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 2
   y: 0
+  coord: 
 --- !u!1 &702106030
 GameObject:
   m_ObjectHideFlags: 0
@@ -2429,6 +2433,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 2
   y: 3
+  coord: 
 --- !u!65 &905935254
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2909,6 +2914,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   y: 2
+  coord: 
 --- !u!65 &1242610209
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3087,6 +3093,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 1
   y: 2
+  coord: 
 --- !u!1 &1278435846
 GameObject:
   m_ObjectHideFlags: 0
@@ -3285,6 +3292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   y: 3
+  coord: 
 --- !u!1 &1501128998
 GameObject:
   m_ObjectHideFlags: 0
@@ -3295,8 +3303,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1501129000}
   - component: {fileID: 1501128999}
+  - component: {fileID: 1501129001}
   m_Layer: 0
-  m_Name: TouchManager
+  m_Name: MoveManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3364,6 +3373,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1501129001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501128998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2318018a6cb8ddc41af1f1ad0968583d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1552718292
 GameObject:
   m_ObjectHideFlags: 0
@@ -3612,6 +3633,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 1
   y: 3
+  coord: 
 --- !u!1 &1753326840
 GameObject:
   m_ObjectHideFlags: 0
@@ -4035,6 +4057,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 1
   y: 0
+  coord: 
 --- !u!1 &1932510292
 GameObject:
   m_ObjectHideFlags: 0
@@ -4083,6 +4106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 0
   y: 1
+  coord: 
 --- !u!65 &1932510295
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4328,6 +4352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   x: 1
   y: 1
+  coord: 
 --- !u!1 &1967243291
 GameObject:
   m_ObjectHideFlags: 0

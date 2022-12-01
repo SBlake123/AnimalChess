@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6586094957703980803}
   - component: {fileID: 6586094957703980802}
   m_Layer: 0
-  m_Name: Giraffe_One
+  m_Name: Dog_One
   m_TagString: ANIMAL
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

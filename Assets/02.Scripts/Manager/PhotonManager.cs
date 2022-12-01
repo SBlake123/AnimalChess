@@ -80,7 +80,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void AnimalMoveRPC(int parentCellx, int parentCelly, int nextCellx, int nextCelly)
     {
-        FindObjectOfType<TouchManager>().AnimalMove(parentCellx, parentCelly, nextCellx, nextCelly);
+        FindObjectOfType<MoveManager>().AnimalMove(parentCellx, parentCelly, nextCellx, nextCelly);
     }
 
     public void AnimalToInven(int parentCellx, int parentCelly)
@@ -91,7 +91,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void AnimalToInvenRPC(int parentCellx, int parentCelly)
     {
-        FindObjectOfType<TouchManager>().AnimalToInven(parentCellx, parentCelly);
+        FindObjectOfType<MoveManager>().AnimalToInven(parentCellx, parentCelly);
     }
 
     public void AnimalComeBack(int invenCellx, int invenCelly, int parentCellx, int parentCelly)
@@ -102,7 +102,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void AnimalComeBackRPC(int invenCellx, int invenCelly, int parentCellx, int parentCelly)
     {
-        FindObjectOfType<TouchManager>().AnimalComeBack(invenCellx, invenCelly, parentCellx, parentCelly);
+        FindObjectOfType<MoveManager>().AnimalComeBack(invenCellx, invenCelly, parentCellx, parentCelly);
     }
 
     public void DecidePlayer(string player)
@@ -146,8 +146,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void EvolveRPC(string player)
     {
-        Chick[] chicklist = FindObjectsOfType<Chick>();
-        foreach (Chick item in chicklist)
+        Chicken[] chicklist = FindObjectsOfType<Chicken>();
+        foreach (Chicken item in chicklist)
         {
             item.DecideEvolve(player);
         }

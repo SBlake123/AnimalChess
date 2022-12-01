@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class TouchManager : MonoBehaviour
+public class MoveManager : MonoBehaviour
 {
     public enum Player { player_one, player_two };
     public Player player;
@@ -218,7 +218,8 @@ public class TouchManager : MonoBehaviour
                             if ((hit.transform.childCount == 0 && IsMyTurn()))
                             {
                                 selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
-                                if (selectAnimalBase.Return())
+
+                                if (CanMove.instance.ReturnCheck(nextCell.GetComponent<Cell>().coord))
                                 {
                                     InventoryCell inventoryCell = selectAnimal.GetComponentInParent<InventoryCell>();
 

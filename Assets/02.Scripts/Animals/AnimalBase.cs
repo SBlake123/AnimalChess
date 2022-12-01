@@ -34,6 +34,5 @@ public abstract class AnimalBase : MonoBehaviour
         }
         else
             return false;
-
     }
 }

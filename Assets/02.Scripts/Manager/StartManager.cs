@@ -8,6 +8,19 @@ public class StartManager : MonoBehaviour
 {
     public static StartManager instance;
     public Cell[] cells;
+
+    public List<Tuple<string, string>> createCellList = new List<Tuple<string, string>>
+    {
+        new Tuple<string,string>("1",SAnimalName.DOG_ONE),
+        new Tuple<string,string>("4",SAnimalName.CAT_TWO),
+        new Tuple<string,string>("5",SAnimalName.LION_ONE),
+        new Tuple<string,string>("6",SAnimalName.CHICKEN_ONE),
+        new Tuple<string,string>("7",SAnimalName.CHICKEN_TWO),
+        new Tuple<string,string>("8",SAnimalName.LION_TWO),
+        new Tuple<string,string>("9",SAnimalName.CAT_ONE),
+        new Tuple<string,string>("12",SAnimalName.DOG_TWO)
+    };
+
     private void Awake()
     {
         if(instance == null)
@@ -25,83 +38,20 @@ public class StartManager : MonoBehaviour
     {
         foreach (var item in cells)
         {
-            switch(item.name)
+            for (int i = 0; i < createCellList.Count; i++)
             {
-                case "1":
-                    {
-                        AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.ELEPHANT_ONE);
-                        AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.transform.SetParent(item.transform);
-                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
-                        animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
-                        break;
-                    }
-                case "4":
-                    {
-                        AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.GIRAFFE_TWO);
-                        AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.transform.SetParent(item.transform);
-                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
-                        animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
-                        break;
-                    }
-                case "5":
-                    {
-                        AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.LION_ONE);
-                        AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.transform.SetParent(item.transform);
-                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
-                        animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
-                        break;
-                    }
-                case "6":
-                    {
-                        AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.CHICK_ONE);
-                        AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.transform.SetParent(item.transform);
-                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
-                        animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
-                        break;
-                    }
-                case "7":
-                    {
-                        AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.CHICK_TWO);
-                        AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.transform.SetParent(item.transform);
-                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
-                        animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
-                        break;
-                    }
-                case "8":
-                    {
-                        AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.LION_TWO);
-                        AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.transform.SetParent(item.transform);
-                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
-                        animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
-                        break;
-                    }
-                case "9":
-                    {
-                        AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.GIRAFFE_ONE);
-                        AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.transform.SetParent(item.transform);
-                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
-                        animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
-                        break;
-                    }
-                case "12":
-                    {
-                        AnimalBase animal = Resources.Load<AnimalBase>(SAnimalName.ELEPHANT_TWO);
-                        AnimalBase animalinst = Instantiate(animal, item.transform.position, item.transform.rotation);
-                        animalinst.transform.SetParent(item.transform);
-                        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
-                        animalinst.transform.position = item.transform.position + new Vector3(0, 0, -0.1f);
-                        break;
-                    }
-                default:
-                    break;
+                if (item.name == createCellList[i].Item1)
+                    AnimalLoadToBoard(item, createCellList[i].Item2);
             }
-        }
+        }   
+    }
+
+    private void AnimalLoadToBoard(Cell cell, string animalName)
+    {
+        AnimalBase animal = Resources.Load<AnimalBase>(animalName);
+        AnimalBase animalinst = Instantiate(animal, cell.transform.position, cell.transform.rotation);
+        animalinst.transform.SetParent(cell.transform);
+        animalinst.parentCell = animalinst.transform.parent.GetComponent<Cell>();
+        animalinst.transform.position = cell.transform.position + new Vector3(0, 0, -0.1f);
     }
 }

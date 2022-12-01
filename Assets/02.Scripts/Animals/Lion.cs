@@ -21,60 +21,18 @@ public class Lion : AnimalBase
     {
         LionInvade();
     }
+
     public override bool Move()
     {
         if (transform.parent != null)
         {
             parentCell = transform.parent.GetComponent<Cell>();
-            if (player == Player.player_one)
-            {
-                if (nextCell.x >= 0 && nextCell.x <= 2 && nextCell.y >= 0 && nextCell.y <= 3)
-                {
-                    if (parentCell.y == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
-                    {
-                        return true;
-                    }
-                    else if (parentCell.x == nextCell.x && (parentCell.y == nextCell.y - 1 || parentCell.y == nextCell.y + 1))
-                    {
-                        return true;
-                    }
-                    else if (parentCell.y + 1 == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
-                    {
-                        return true;
-                    }
-                    else if (parentCell.y - 1 == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
-                    {
-                        return true;
-                    }
-                    else
-                        return false;
-                }
-                else
-                    return false;
-            }
 
-            else if (player == Player.player_two)
+            if (CanMove.instance.BoundaryCheck(nextCell.coord))
             {
-                if (nextCell.x >= 0 && nextCell.x <= 2 && nextCell.y >= 0 && nextCell.y <= 3)
+                if (CanMove.instance.MoveCheck(parentCell.coord, nextCell.coord, "Lion"))
                 {
-                    if (parentCell.y == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
-                    {
-                        return true;
-                    }
-                    else if (parentCell.x == nextCell.x && (parentCell.y == nextCell.y - 1 || parentCell.y == nextCell.y + 1))
-                    {
-                        return true;
-                    }
-                    else if (parentCell.y + 1 == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
-                    {
-                        return true;
-                    }
-                    else if (parentCell.y - 1 == nextCell.y && (parentCell.x == nextCell.x - 1 || parentCell.x == nextCell.x + 1))
-                    {
-                        return true;
-                    }
-                    else
-                        return false;
+                    return true;
                 }
                 else
                     return false;
