@@ -1,5 +1,5 @@
 #define PC
-//#define MOBILE
+#define MOBILE
 #define COMMON
 using System;
 using System.Collections;
@@ -14,7 +14,7 @@ public class MoveManager : MonoBehaviour
 
     public Cell[] cells = new Cell[] { };
     public InventoryCell[] inventoryCells = new InventoryCell[] { };
-    
+
     public GameObject selectAnimal;
     public AnimalBase selectAnimalBase;
     public AnimalBase toInvenAnimal;
@@ -62,214 +62,191 @@ public class MoveManager : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Physics.Raycast(ray, out hit);
 
+            // 이동 알고리즘 수행 코드
             if (hit.collider != null)
             {
-                //선택된 말이 없이 자기 턴인 상태인 경우
                 if (selectAnimal == null)
                 {
-                    //어떤 말인지 파악해서 기억하는 중
                     if (hit.collider.gameObject.GetComponent<AnimalBase>())
                     {
-                        selectAnimal = hit.collider.gameObject;
-                        selectAnimalBase = hit.collider.gameObject.GetComponent<AnimalBase>();
-                        Debug.Log($"{selectAnimalBase}");
+                        SelectAnimal();
+                        return;
                     }
-
-                    else if (hit.collider.tag == "GAMEBOARD" || hit.collider.tag == "BACKGROUND")
-                    {
-                        selectAnimal = null;
-                        selectAnimalBase = null;
-                    }
+                    else return;
                 }
-                //선택된 말이 있는 경우 자기턴인 상태인 경우
-                else if (selectAnimal != null)
+                //선택된 말이 있는 경우, 자기턴인 상태인 경우
+                else if (selectAnimal != null && IsMyTurn())
                 {
-                    if (selectAnimal.transform.tag == "ANIMAL")
+                    //선택된 동물 태그가 ANIMAL, hit collider 태그
+                    if (TagCheck(hit, "ANIMAL", "GAMEBOARD"))
                     {
-                        if (hit.collider.tag == "GAMEBOARD")
+                        //게임 보드 위에 말이 없을 때
+                        if ((ChildCountCalc(0, hit)))
                         {
-                            //게임 보드 위에 말이 없을 때
-                            if ((hit.transform.childCount == 0 && IsMyTurn()))
+                            selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
+                            //AnimalBase의 Move값이 true라면
+                            if (selectAnimalBase.Move())
                             {
-                                selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
-                                if (selectAnimalBase.Move())
-                                {
-                                    CalcCell();
-
-                                    selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
-                                    selectAnimal.transform.parent = hit.collider.transform;
-                                    selectAnimalBase.parentCell = hit.collider.gameObject.GetComponent<Cell>();
-
-                                    PhotonManager.instance.AnimalMove(parentCellx, parentCelly, nextCellx, nextCelly);
-
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    TurnManager.instance.TurnOver();
-                                }
-
-                                else
-                                {
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    return;
-                                }
-                            }
-                            //게임 보드 위에 상대방 말이 있을 때
-                            else if (hit.transform.childCount == 1 && ((hit.transform.GetComponentInChildren<AnimalBase>().player != selectAnimalBase.player)) && IsMyTurn())
-                            {
-                                selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
-                                if (selectAnimalBase.Move())
-                                {
-                                    CalcCell();
-
-                                    selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
-                                    selectAnimal.transform.parent = hit.collider.transform;
-                                    selectAnimalBase.parentCell = hit.collider.gameObject.GetComponent<Cell>();
-
-                                    Cell deadCell = hit.collider.gameObject.GetComponent<Cell>();
-
-                                    ToInven(hit.transform.GetComponentInChildren<AnimalBase>());
-
-                                    PhotonManager.instance.AnimalToInven(deadCell.x, deadCell.y);
-                                    PhotonManager.instance.AnimalMove(parentCellx, parentCelly, nextCellx, nextCelly);
-
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    TurnManager.instance.TurnOver();
-                                }
-
-                                else
-                                {
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    return;
-                                }
-                            }
-                            //그 외의 경우 이동이 일어나지 않는다
-                            else
-                            {
-                                selectAnimal = null;
-                                selectAnimalBase = null;
+                                //RPC가 보내줄 int형 변수 추출, 로컬 움직임, RPC 움직임 호출, 선택한 동물 초기화, 턴 넘김
+                                CalcCell();
+                                LocalMovetoClickedGameBoard(hit);
+                                CallMoveRPC();
+                                SelectAnimalNull();
+                                TurnOver();
                                 return;
                             }
-
                         }
-                        //말을 눌렀을 때
-                        else if (hit.collider.tag == "ANIMAL")
+                        //게임 보드 위에 상대방 말이 있을 때
+                        else if (ChildCountCalc(1, hit) && ((ChildrenAnimalIsNotMine(hit))))
                         {
-                            //그 말이 상대방 것이라면
-                            if (hit.transform.GetComponent<AnimalBase>().player != selectAnimal.GetComponent<AnimalBase>().player && IsMyTurn())
+                            selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
+                            if (selectAnimalBase.Move())
                             {
-                                selectAnimalBase.nextCell = hit.transform.parent.GetComponent<Cell>();
-                                if (selectAnimalBase.Move())
-                                {
-                                    CalcCell();
-
-                                    selectAnimal.transform.position = hit.collider.transform.parent.position + new Vector3(0, 0, -0.1f);
-                                    selectAnimal.transform.parent = hit.collider.transform.parent;
-                                    selectAnimalBase.parentCell = hit.collider.gameObject.GetComponentInParent<Cell>();
-
-                                    Cell deadCell = hit.collider.gameObject.GetComponentInParent<Cell>();
-
-                                    ToInven(hit.transform.GetComponent<AnimalBase>());
-
-                                    PhotonManager.instance.AnimalToInven(deadCell.x, deadCell.y);
-                                    PhotonManager.instance.AnimalMove(parentCellx, parentCelly, nextCellx, nextCelly);
-
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    TurnManager.instance.TurnOver();
-                                }
-                                else
-                                {
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    return;
-                                }
-                            }
-                            else if (hit.transform.GetComponent<AnimalBase>().player == selectAnimal.GetComponent<AnimalBase>().player && IsMyTurn())
-                            {
-                                selectAnimal = hit.collider.gameObject;
-                                selectAnimalBase = hit.collider.gameObject.GetComponent<AnimalBase>();
+                                CalcCell();
+                                LocalMovetoClickedGameBoard(hit);
+                                GetLocalAnimalAndCallRPC(hit, "GAMEBOARD");
+                                CallMoveRPC();
+                                SelectAnimalNull();
+                                TurnOver();
                                 return;
                             }
-                            //그 외의 경우라면
-                            else
-                            {
-                                selectAnimal = null;
-                                selectAnimalBase = null;
-                                return;
-                            }
-
                         }
-                        //배경 눌렀을 때
-                        else if (hit.collider.tag == "BACKGROUND")
+                    }
+                    //말을 눌렀을 때
+                    else if (TagCheck(hit, "ANIMAL", "ANIMAL"))
+                    {
+                        //그 말이 상대방 것이라면
+                        if (AnimalIsNotMine(hit))
                         {
-                            selectAnimal = null;
-                            selectAnimalBase = null;
+                            selectAnimalBase.nextCell = hit.transform.parent.GetComponent<Cell>();
+                            if (selectAnimalBase.Move())
+                            {
+                                CalcCell();
+                                LocalMovetoClickedAnimal(hit);
+                                GetLocalAnimalAndCallRPC(hit, "ANIMAL");
+                                CallMoveRPC();
+                                SelectAnimalNull();
+                                TurnOver();
+                                return;
+                            }
+                        }
+                        else if (!AnimalIsNotMine(hit))
+                        {
+                            SelectAnimal();
                             return;
                         }
                     }
-                    else if (selectAnimal.transform.tag == "BANNED")
+
+                    else if (TagCheck(hit, "BANNED", "GAMEBOARD"))
                     {
-                        if (hit.collider.tag == "GAMEBOARD")
+                        //게임 보드 위에 말이 없을 때만 움직일 수 있다잉!
+                        if ((ChildCountCalc(0, hit)))
                         {
-                            //게임 보드 위에 말이 없을 때만 움직일 수 있다잉!
-                            if ((hit.transform.childCount == 0 && IsMyTurn()))
+                            selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
+                            if (CanMove.instance.ReturnCheck(selectAnimalBase.player.ToString(), selectAnimalBase.nextCell.coord))
                             {
-                                selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
-
-                                if (CanMove.instance.ReturnCheck(nextCell.GetComponent<Cell>().coord))
-                                {
-                                    InventoryCell inventoryCell = selectAnimal.GetComponentInParent<InventoryCell>();
-
-                                    selectAnimal.transform.tag = "ANIMAL";
-                                    selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
-                                    selectAnimal.transform.parent = hit.collider.transform;
-                                    selectAnimal.transform.localScale *= 2f;
-                                    selectAnimalBase.parentCell = hit.collider.gameObject.GetComponent<Cell>();                      
-                                   
-                                    PhotonManager.instance.AnimalComeBack(inventoryCell.x, inventoryCell.y, selectAnimalBase.parentCell.x, selectAnimalBase.parentCell.y);
-
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    TurnManager.instance.TurnOver();
-                                }
-                                else
-                                {
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    return;
-                                }
-                            }
-                            //그 외의 경우 이동이 일어나지 않는다
-                            else
-                            {
-                                selectAnimal = null;
-                                selectAnimalBase = null;
+                                BackToGameBoard(hit);
+                                SelectAnimalNull();
+                                TurnOver();
                                 return;
                             }
-
-                        }
-                        //배경 눌렀을 때
-                        else if (hit.collider.tag == "BACKGROUND")
-                        {
-                            selectAnimal = null;
-                            selectAnimalBase = null;
-                            return;
                         }
                     }
                 }
-                else
-                    Debug.Log("null");
+                SelectAnimalNull();
+                return;
+
             }
+
+            #region LocalMethod
+            void LocalMovetoClickedGameBoard(RaycastHit hit)
+            {
+                selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
+                selectAnimal.transform.SetParent(hit.collider.transform);
+                selectAnimalBase.parentCell = hit.collider.gameObject.GetComponent<Cell>();
+            }
+
+            void LocalMovetoClickedAnimal(RaycastHit hit)
+            {
+                selectAnimal.transform.position = hit.collider.transform.parent.position + new Vector3(0, 0, -0.1f);
+                selectAnimal.transform.SetParent(hit.collider.transform.parent);
+                selectAnimalBase.parentCell = hit.collider.gameObject.GetComponentInParent<Cell>();
+            }
+
+            void BackToGameBoard(RaycastHit hit)
+            {
+                InventoryCell inventoryCell = selectAnimal.GetComponentInParent<InventoryCell>();
+
+                selectAnimal.transform.tag = "ANIMAL";
+                selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
+                selectAnimal.transform.parent = hit.collider.transform;
+                selectAnimal.transform.localScale *= 2f;
+                selectAnimalBase.parentCell = hit.collider.gameObject.GetComponent<Cell>();
+
+                PhotonManager.instance.AnimalComeBack(inventoryCell.x, inventoryCell.y, selectAnimalBase.parentCell.x, selectAnimalBase.parentCell.y);
+            }
+
+            void SelectAnimal()
+            {
+                selectAnimal = hit.collider.gameObject;
+                selectAnimalBase = hit.collider.gameObject.GetComponent<AnimalBase>();
+            }
+
+            void SelectAnimalNull()
+            {
+                selectAnimal = null;
+                selectAnimalBase = null;
+            }
+
+            void CallMoveRPC()
+            {
+                PhotonManager.instance.AnimalMove(parentCellx, parentCelly, nextCellx, nextCelly);
+            }
+
+            void GetLocalAnimalAndCallRPC(RaycastHit hit, string tag)
+            {
+                Cell deadCell = (tag == "GAMEBOARD") ? hit.collider.gameObject.GetComponent<Cell>() : hit.collider.gameObject.GetComponentInParent<Cell>();
+                AnimalBase animalBase = (tag == "GAMEBOARD") ? hit.transform.GetComponentInChildren<AnimalBase>() : hit.transform.GetComponent<AnimalBase>();
+
+                ToInven(animalBase);
+
+                PhotonManager.instance.AnimalToInven(deadCell.x, deadCell.y);
+            }
+
+            void TurnOver()
+            {
+                TurnManager.instance.TurnOver();
+            }
+
+            bool TagCheck(RaycastHit hit, string selectAnimalTag, string hitColTag)
+            {
+                bool tagCheckResult;
+                return tagCheckResult = (selectAnimalBase.transform.tag == selectAnimalTag && hit.transform.tag == hitColTag) ? true : false;
+            }
+
+            bool ChildCountCalc(int childCount, RaycastHit hit)
+            {
+                bool calcResult;
+                return calcResult = (hit.transform.childCount == childCount && IsMyTurn()) ? true : false;
+            }
+
+            bool AnimalIsNotMine(RaycastHit hit)
+            {
+                bool isNotMine;
+                return isNotMine = (hit.transform.GetComponent<AnimalBase>().player != selectAnimal.GetComponent<AnimalBase>().player) ? true : false;
+            }
+
+            bool ChildrenAnimalIsNotMine(RaycastHit hit)
+            {
+                bool isNotMine;
+                return isNotMine = (hit.transform.GetComponentInChildren<AnimalBase>().player != selectAnimalBase.player) ? true : false;
+            }
+            #endregion
         }
     }
-
-
 #endif
-#if MOBILE
 
+#if MOBILE
     private void TouchAndMove()
     {
         if (Input.touchCount > 0)
@@ -280,206 +257,187 @@ public class MoveManager : MonoBehaviour
 
             if (hit.collider != null)
             {
-                //선택된 말이 없이 자기 턴인 상태인 경우
+                //선택된 말이 없을 경우
                 if (selectAnimal == null)
                 {
-                    //어떤 말인지 파악해서 기억하는 중
                     if (hit.collider.gameObject.GetComponent<AnimalBase>())
                     {
-                        selectAnimal = hit.collider.gameObject;
-                        selectAnimalBase = hit.collider.gameObject.GetComponent<AnimalBase>();
-                        Debug.Log($"{selectAnimalBase}");
+                        SelectAnimal();
+                        return;
                     }
-
-                    else if (hit.collider.tag == "GAMEBOARD" || hit.collider.tag == "BACKGROUND")
-                    {
-                        selectAnimal = null;
-                        selectAnimalBase = null;
-                    }
+                    else return;
                 }
                 //선택된 말이 있는 경우 자기턴인 상태인 경우
                 else if (selectAnimal != null)
                 {
-                    if (selectAnimal.transform.tag == "ANIMAL")
+                    if (TagCheck(hit, "ANIMAL", "GAMEBOARD"))
                     {
-                        if (hit.collider.tag == "GAMEBOARD")
+                        //게임 보드 위에 말이 없을 때
+                        if ((ChildCountCalc(0, hit)))
                         {
-                            //게임 보드 위에 말이 없을 때
-                            if ((hit.transform.childCount == 0 && IsMyTurn()))
+                            selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
+                            //AnimalBase의 Move값이 true라면
+                            if (selectAnimalBase.Move())
                             {
-                                selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
-                                if (selectAnimalBase.Move())
-                                {
-                                    CalcCell();
-
-                                    selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
-                                    selectAnimal.transform.parent = hit.collider.transform;
-                                    selectAnimalBase.parentCell = hit.collider.gameObject.GetComponent<Cell>();
-
-                                    PhotonManager.instance.AnimalMove(parentCellx, parentCelly, nextCellx, nextCelly);
-
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    TurnManager.instance.TurnOver();
-                                }
-
-                                else
-                                {
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    return;
-                                }
-                            }
-                            //게임 보드 위에 상대방 말이 있을 때
-                            else if (hit.transform.childCount == 1 && ((hit.transform.GetComponentInChildren<AnimalBase>().player != selectAnimalBase.player)) && IsMyTurn())
-                            {
-                                selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
-                                if (selectAnimalBase.Move())
-                                {
-                                    CalcCell();
-
-                                    selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
-                                    selectAnimal.transform.parent = hit.collider.transform;
-                                    selectAnimalBase.parentCell = hit.collider.gameObject.GetComponent<Cell>();
-
-                                    Cell deadCell = hit.collider.gameObject.GetComponent<Cell>();
-
-                                    ToInven(hit.transform.GetComponentInChildren<AnimalBase>());
-
-                                    PhotonManager.instance.AnimalToInven(deadCell.x, deadCell.y);
-                                    PhotonManager.instance.AnimalMove(parentCellx, parentCelly, nextCellx, nextCelly);
-
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    TurnManager.instance.TurnOver();
-                                }
-                                else
-                                {
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    return;
-                                }
-                            }
-                            //그 외의 경우 이동이 일어나지 않는다
-                            else
-                            {
-                                selectAnimal = null;
-                                selectAnimalBase = null;
+                                //RPC가 보내줄 int형 변수 추출, 로컬 움직임, RPC 움직임 호출, 선택한 동물 초기화, 턴 넘김
+                                CalcCell();
+                                LocalMovetoClickedGameBoard(hit);
+                                CallMoveRPC();
+                                SelectAnimalNull();
+                                TurnOver();
                                 return;
                             }
-
                         }
-                        //말을 눌렀을 때
-                        else if (hit.collider.tag == "ANIMAL")
+                        //게임 보드 위에 상대방 말이 있을 때
+                        else if (ChildCountCalc(1, hit) && ((ChildrenAnimalIsNotMine(hit))))
                         {
-                            //그 말이 상대방 것이라면
-                            if (hit.transform.GetComponent<AnimalBase>().player != selectAnimal.GetComponent<AnimalBase>().player && IsMyTurn())
+                            selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
+                            if (selectAnimalBase.Move())
                             {
-                                selectAnimalBase.nextCell = hit.transform.parent.GetComponent<Cell>();
-                                if (selectAnimalBase.Move())
-                                {
-                                    CalcCell();
-
-                                    selectAnimal.transform.position = hit.collider.transform.parent.position + new Vector3(0, 0, -0.1f);
-                                    selectAnimal.transform.parent = hit.collider.transform.parent;
-                                    selectAnimalBase.parentCell = hit.collider.gameObject.GetComponentInParent<Cell>();
-
-                                    Cell deadCell = hit.collider.gameObject.GetComponentInParent<Cell>();
-
-                                    ToInven(hit.transform.GetComponent<AnimalBase>());
-
-                                    PhotonManager.instance.AnimalToInven(deadCell.x, deadCell.y);
-                                    PhotonManager.instance.AnimalMove(parentCellx, parentCelly, nextCellx, nextCelly);
-
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    TurnManager.instance.TurnOver();
-                                }
-                                else
-                                {
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    return;
-                                }
-                            }
-                            else if (hit.transform.GetComponent<AnimalBase>().player == selectAnimal.GetComponent<AnimalBase>().player && IsMyTurn())
-                            {
-                                selectAnimal = hit.collider.gameObject;
-                                selectAnimalBase = hit.collider.gameObject.GetComponent<AnimalBase>();
+                                CalcCell();
+                                LocalMovetoClickedGameBoard(hit);
+                                GetLocalAnimalAndCallRPC(hit, "GAMEBOARD");
+                                CallMoveRPC();
+                                SelectAnimalNull();
+                                TurnOver();
                                 return;
                             }
-                            //그 외의 경우라면
-                            else
-                            {
-                                selectAnimal = null;
-                                selectAnimalBase = null;
-                                return;
-                            }
-
                         }
-                        //배경 눌렀을 때
-                        else if (hit.collider.tag == "BACKGROUND")
+                    }
+                    //말을 눌렀을 때
+                    else if (TagCheck(hit, "ANIMAL", "ANIMAL"))
+                    {
+                        //그 말이 상대방 것이라면
+                        if (AnimalIsNotMine(hit) && IsMyTurn())
                         {
-                            selectAnimal = null;
-                            selectAnimalBase = null;
+                            selectAnimalBase.nextCell = hit.transform.parent.GetComponent<Cell>();
+                            if (selectAnimalBase.Move())
+                            {
+                                CalcCell();
+                                LocalMovetoClickedAnimal(hit);
+                                GetLocalAnimalAndCallRPC(hit, "ANIMAL");
+                                CallMoveRPC();
+                                SelectAnimalNull();
+                                TurnOver();
+                                return;
+                            }
+                        }
+                        else if (!AnimalIsNotMine(hit) && IsMyTurn())
+                        {
+                            SelectAnimal();
                             return;
                         }
                     }
-                    else if (selectAnimal.transform.tag == "BANNED")
+
+                    else if (TagCheck(hit, "BANNED", "GAMEBOARD"))
                     {
-                        if (hit.collider.tag == "GAMEBOARD")
+                        //게임 보드 위에 말이 없을 때만 움직일 수 있다잉!
+                        if ((ChildCountCalc(0, hit)))
                         {
-                            //게임 보드 위에 말이 없을 때만 움직일 수 있다잉!
-                            if ((hit.transform.childCount == 0 && IsMyTurn()))
+                            selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
+                            if (CanMove.instance.ReturnCheck(selectAnimalBase.player.ToString(), selectAnimalBase.nextCell.coord))
                             {
-                                selectAnimalBase.nextCell = hit.transform.GetComponent<Cell>();
-                                if (selectAnimalBase.Return())
-                                {
-                                    InventoryCell inventoryCell = selectAnimal.GetComponentInParent<InventoryCell>();
-
-                                    selectAnimal.transform.tag = "ANIMAL";
-                                    selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
-                                    selectAnimal.transform.parent = hit.collider.transform;
-                                    selectAnimal.transform.localScale *= 2f;
-                                    selectAnimalBase.parentCell = hit.collider.gameObject.GetComponent<Cell>();                      
-                                   
-                                    PhotonManager.instance.AnimalComeBack(inventoryCell.x, inventoryCell.y, selectAnimalBase.parentCell.x, selectAnimalBase.parentCell.y);
-
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    TurnManager.instance.TurnOver();
-                                }
-                                else
-                                {
-                                    selectAnimal = null;
-                                    selectAnimalBase = null;
-                                    return;
-                                }
-                            }
-                            //그 외의 경우 이동이 일어나지 않는다
-                            else
-                            {
-                                selectAnimal = null;
-                                selectAnimalBase = null;
+                                BackToGameBoard(hit);
+                                SelectAnimalNull();
+                                TurnOver();
                                 return;
                             }
-
-                        }
-                        //배경 눌렀을 때
-                        else if (hit.collider.tag == "BACKGROUND")
-                        {
-                            selectAnimal = null;
-                            selectAnimalBase = null;
-                            return;
                         }
                     }
                 }
-                else
-                    Debug.Log("null");
+                SelectAnimalNull();
+                return;
+
+                #region LocalMethod
+                void SelectAnimal()
+                {
+                    selectAnimal = hit.collider.gameObject;
+                    selectAnimalBase = hit.collider.gameObject.GetComponent<AnimalBase>();
+                }
+
+                void LocalMovetoClickedGameBoard(RaycastHit hit)
+                {
+                    selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
+                    selectAnimal.transform.SetParent(hit.collider.transform);
+                    selectAnimalBase.parentCell = hit.collider.gameObject.GetComponent<Cell>();
+                }
+
+                void LocalMovetoClickedAnimal(RaycastHit hit)
+                {
+                    selectAnimal.transform.position = hit.collider.transform.parent.position + new Vector3(0, 0, -0.1f);
+                    selectAnimal.transform.SetParent(hit.collider.transform.parent);
+                    selectAnimalBase.parentCell = hit.collider.gameObject.GetComponentInParent<Cell>();
+                }
+
+                void CallMoveRPC()
+                {
+                    PhotonManager.instance.AnimalMove(parentCellx, parentCelly, nextCellx, nextCelly);
+                }
+
+                void GetLocalAnimalAndCallRPC(RaycastHit hit, string tag)
+                {
+                    Cell deadCell = (tag == "GAMEBOARD") ? hit.collider.gameObject.GetComponent<Cell>() : hit.collider.gameObject.GetComponentInParent<Cell>();
+                    AnimalBase animalBase = (tag == "GAMEBOARD") ? hit.transform.GetComponentInChildren<AnimalBase>() : hit.transform.GetComponent<AnimalBase>();
+
+                    ToInven(animalBase);
+
+                    PhotonManager.instance.AnimalToInven(deadCell.x, deadCell.y);
+                }
+
+                void BackToGameBoard(RaycastHit hit)
+                {
+                    InventoryCell inventoryCell = selectAnimal.GetComponentInParent<InventoryCell>();
+
+                    selectAnimal.transform.tag = "ANIMAL";
+                    selectAnimal.transform.position = hit.collider.transform.position + new Vector3(0, 0, -0.1f);
+                    selectAnimal.transform.parent = hit.collider.transform;
+                    selectAnimal.transform.localScale *= 2f;
+                    selectAnimalBase.parentCell = hit.collider.gameObject.GetComponent<Cell>();
+
+                    PhotonManager.instance.AnimalComeBack(inventoryCell.x, inventoryCell.y, selectAnimalBase.parentCell.x, selectAnimalBase.parentCell.y);
+
+                    SelectAnimalNull();
+                    TurnOver();
+                }
+
+                void SelectAnimalNull()
+                {
+                    selectAnimal = null;
+                    selectAnimalBase = null;
+                }
+
+                void TurnOver()
+                {
+                    TurnManager.instance.TurnOver();
+                }
+
+                bool TagCheck(RaycastHit hit, string selectAnimalTag, string hitColTag)
+                {
+                    bool tagCheckResult = (selectAnimalBase.transform.tag == selectAnimalTag && hit.transform.tag == hitColTag) ? true : false;
+                    return tagCheckResult;
+                }
+
+                bool ChildCountCalc(int childCount, RaycastHit hit)
+                {
+                    bool calcResult;
+                    return calcResult = (hit.transform.childCount == childCount && IsMyTurn()) ? true : false;
+                }
+
+                bool AnimalIsNotMine(RaycastHit hit)
+                {
+                    bool isNotMine;
+                    return isNotMine = (hit.transform.GetComponent<AnimalBase>().player != selectAnimal.GetComponent<AnimalBase>().player) ? true : false;
+                }
+
+                bool ChildrenAnimalIsNotMine(RaycastHit hit)
+                {
+                    bool isNotMine;
+                    return isNotMine = (hit.transform.GetComponentInChildren<AnimalBase>().player != selectAnimalBase.player) ? true : false;
+                }
+                #endregion
             }
         }
     }
-
 #endif
 
 #if COMMON
@@ -489,6 +447,26 @@ public class MoveManager : MonoBehaviour
         parentCelly = selectAnimalBase.parentCell.y;
         nextCellx = selectAnimalBase.nextCell.x;
         nextCelly = selectAnimalBase.nextCell.y;
+    }
+
+    private bool IsMyTurn()
+    {
+        if ((selectAnimalBase.player.ToString() == TurnManager.instance.me.ToString()) &&
+            (TurnManager.instance.me.ToString() == TurnManager.instance.player.ToString()))
+            return true;
+        else
+            return false;
+    }
+
+    private void AnimalReset()
+    {
+        selectAnimal = null;
+        selectAnimalBase = null;
+        toInvenAnimal = null;
+        parentCell = null;
+        nextCell = null;
+        fromInvenAnimal = null;
+        ToInvenParentCell = null;
     }
 
     public void ToInven(AnimalBase animalBase)
@@ -579,26 +557,6 @@ public class MoveManager : MonoBehaviour
 
         animal = ToInvenParentCell.GetComponentInChildren<AnimalBase>();
         ToInven(animal);
-    }
-
-    private bool IsMyTurn()
-    {
-        if ((selectAnimalBase.player.ToString() == TurnManager.instance.me.ToString()) &&
-            (TurnManager.instance.me.ToString() == TurnManager.instance.player.ToString()))
-            return true;
-        else
-            return false;
-    }
-
-    private void AnimalReset()
-    {
-        selectAnimal = null;
-        selectAnimalBase = null;
-        toInvenAnimal = null;
-        parentCell = null;
-        nextCell = null;
-        fromInvenAnimal = null;
-        ToInvenParentCell = null;
     }
 #endif
 }

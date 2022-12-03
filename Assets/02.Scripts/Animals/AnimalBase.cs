@@ -15,24 +15,4 @@ public abstract class AnimalBase : MonoBehaviour
 
     public abstract bool Move();
     public abstract void ImageChange();
-
-    public bool Return()
-    {
-        if (player == Player.player_one)
-        {
-            if (nextCell.y >= 0 && nextCell.y <= 2)
-                return true;
-            else
-                return false;
-        }
-        else if (player == Player.player_two)
-        {
-            if (nextCell.y >= 1 && nextCell.y <= 3)
-                return true;
-            else
-                return false;
-        }
-        else
-            return false;
-    }
 }

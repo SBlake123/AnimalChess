@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,31 +6,14 @@ using UnityEngine;
 public class CanMove : MonoBehaviour
 {
     public static CanMove instance;
-
-    public void Start()
+    
+    private void Awake()
     {
         if (instance == null)
         {
             instance = this;
         }
     }
-
-    static int[] centerTop = { 0, 1 };
-    static int[] centerBottom = { 0, -1 };
-    static int[] centerLeft = { -1, 0 };
-    static int[] centerRight = { 1, 0 };
-    static int[] leftTop = { -1, 1 };
-    static int[] leftBottom = { -1, -1 };
-    static int[] rightTop = { 1, 1 };
-    static int[] rightBottom = { 1, 0 };
-
-    int[][] lionBoundary = { centerTop, centerBottom, centerLeft, centerRight, leftTop, leftBottom, rightTop, rightBottom };
-    int[][] catBoundary = { leftTop, leftBottom, rightTop, rightBottom };
-    int[][] dogBoundary = { centerTop, centerBottom, centerLeft, centerRight };
-    int[][] chickenOneBoundary = { centerRight };
-    int[][] chickenTwoBoundary = { centerLeft };
-    int[][] superChickenOneBoundary = { centerTop, centerBottom, centerLeft, centerRight, rightTop, rightBottom };
-    int[][] superChickenTwoBoundary = { centerTop, centerBottom, centerLeft, centerRight, leftTop, leftBottom };
 
     public bool BoundaryCheck(int[] nextCellCoord)
     {
@@ -39,62 +23,61 @@ public class CanMove : MonoBehaviour
 
     public bool MoveCheck(int[] parentCellCoord, int[] nextCellCoord, string animal)
     {
+        BasicCoordAndBoundary basic = new BasicCoordAndBoundary();
+
+        int[][] lionBoundary = { basic.centerTop, basic.centerBottom, basic.centerLeft, basic.centerRight, basic.leftTop, basic.leftBottom, basic.rightTop, basic.rightBottom };
+        int[][] catBoundary = { basic.leftTop, basic.leftBottom, basic.rightTop, basic.rightBottom };
+        int[][] dogBoundary = { basic.centerTop, basic.centerBottom, basic.centerLeft, basic.centerRight };
+        int[][] chickenOneBoundary = { basic.centerRight };
+        int[][] chickenTwoBoundary = { basic.centerLeft };
+        int[][] superChickenOneBoundary = { basic.centerTop, basic.centerBottom, basic.centerLeft, basic.centerRight, basic.rightTop, basic.rightBottom };
+        int[][] superChickenTwoBoundary = { basic.centerTop, basic.centerBottom, basic.centerLeft, basic.centerRight, basic.leftTop, basic.leftBottom };
+
+        Dictionary<string, int[][]> nameAndBoundaryDic = new Dictionary<string, int[][]>
+        {
+            { "Lion",lionBoundary },
+            { "Cat", catBoundary },
+            { "Dog", dogBoundary },
+            { "ChickenOne", chickenOneBoundary },
+            { "ChickenTwo", chickenTwoBoundary },
+            { "SuperChickenOne", superChickenOneBoundary },
+            { "SuperChickenTwo", superChickenTwoBoundary },
+        };
+
         bool checkResult = false;
         int[] calcCell = { (nextCellCoord[1] - parentCellCoord[1]), (nextCellCoord[0] - parentCellCoord[0]) };
-        Debug.Log(calcCell[0]);
-        switch (animal)
-        {
-            case ("Lion"):
-                checkResult = CompareBoundary(calcCell, lionBoundary);
-                break;
 
-            case ("Cat"):
-                checkResult = CompareBoundary(calcCell, catBoundary);
-                break;
-
-            case ("Dog"):
-                checkResult = CompareBoundary(calcCell, dogBoundary);
-                break;
-
-            case ("ChickenOne"):
-                checkResult = CompareBoundary(calcCell, chickenOneBoundary);
-                break;
-
-            case ("ChickenTwo"):
-                checkResult = CompareBoundary(calcCell, chickenTwoBoundary);
-                break;
-
-            case ("SuperChickenOne"):
-                checkResult = CompareBoundary(calcCell, superChickenOneBoundary);
-                break;
-
-            case ("SuperChickenTwo"):
-                checkResult = CompareBoundary(calcCell, superChickenTwoBoundary);
-                break;
-        }
-
-        return checkResult;
+        return checkResult = CompareBoundary(calcCell, nameAndBoundaryDic[animal]);
     }
 
-    public bool ReturnCheck(int[] nextCellCoord)
+    private bool CompareBoundary(int[] calcCell, int[][] animalBoundary)
     {
-        return false;
-    }
-
-    public bool CompareBoundary(int[] calcCell, int[][] animalBoundary)
-    {
-
         bool checkResult = false;
 
         foreach (var item in animalBoundary)
         {
             if (calcCell[0] == item[0] && calcCell[1] == item[1])
             {
-                checkResult = true;
-                break;
+                return checkResult = true;
             }
         }
-
         return checkResult;
     }
+
+    public bool ReturnCheck(string player, int[] nextCellCoord)
+    {
+        bool returnCheck;
+
+        if (player == "player_one")
+        {
+            return returnCheck = (nextCellCoord[1] >= 0 && nextCellCoord[1] <= 2) ? true : false;
+        }
+        else if (player == "player_two")
+        {
+            return returnCheck = (nextCellCoord[1] >= 1 && nextCellCoord[1] <= 3) ? true : false;
+        }
+        else
+            return false;
+    }
+
 }

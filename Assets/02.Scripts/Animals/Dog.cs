@@ -11,14 +11,13 @@ public class Dog : AnimalBase
 
     public override void ImageChange()
     {
-        if (player == Player.player_one)
-            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("dogOne");
-        else
-            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("dogTwo");
+        transform.GetComponent<SpriteRenderer>().sprite = (player == Player.player_one) ? Resources.Load<Sprite>("dogOne") : Resources.Load<Sprite>("dogTwo");
     }
 
     public override bool Move()
     {
+        bool moveResult = false;
+
         if (transform.parent != null)
         {
             parentCell = transform.parent.GetComponent<Cell>();
@@ -27,15 +26,11 @@ public class Dog : AnimalBase
             {
                 if (CanMove.instance.MoveCheck(parentCell.coord, nextCell.coord, "Dog"))
                 {
-                    return true;
+                    moveResult = true;
                 }
-                else
-                    return false;
             }
-            else
-                return false;
         }
-        else
-            return false;
+
+        return moveResult;
     }
 }

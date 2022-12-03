@@ -41,11 +41,12 @@ public class WinManager : MonoBehaviour
             invadeSuccessCount = 1;
             invadeSuccessPlayer = player;
         }
+        Debug.Log("invade Success");
     }
 
     private void InvadeWin(int turnOverCount, string player)
     {
-        if (turnOverCount >= 1 && !lionDie)
+        if (turnOverCount > 1 && !lionDie)
         {
             CanvasActive(player);
         }

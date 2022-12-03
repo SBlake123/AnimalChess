@@ -99,7 +99,7 @@ public class TurnManager : MonoBehaviour
             player = Player.player_one;
             turnText.text = $"{masterText.text}'s Turn";
         }
-
+        Debug.Log(WinManager.instance.turnOverCount);
         PhotonManager.instance.DecideTurn(player.ToString());
         if (WinManager.instance.invadeSuccessCount == 1) WinManager.instance.turnOverCount++;
     }

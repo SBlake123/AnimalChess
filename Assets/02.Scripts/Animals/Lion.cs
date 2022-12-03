@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lion : AnimalBase
+public class Lion : AnimalBase, ILastCellArrive
 {
     public void Start()
     {
@@ -11,60 +11,45 @@ public class Lion : AnimalBase
 
     public override void ImageChange()
     {
-        if (player == Player.player_one)
-            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("LionOne");
-        else
-            transform.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("LionTwo");
-    }
-
-    public void Update()
-    {
-        LionInvade();
+        transform.GetComponent<SpriteRenderer>().sprite = (player == Player.player_one) ? Resources.Load<Sprite>("LionOne") : Resources.Load<Sprite>("LionTwo");
     }
 
     public override bool Move()
     {
-        if (transform.parent != null)
-        {
-            parentCell = transform.parent.GetComponent<Cell>();
+        bool moveResult = false;
 
-            if (CanMove.instance.BoundaryCheck(nextCell.coord))
+        parentCell = transform.parent.GetComponent<Cell>();
+
+        if (player == Player.player_one)
+        {
+            if (CanMove.instance.MoveCheck(parentCell.coord, nextCell.coord, "Lion"))
             {
-                if (CanMove.instance.MoveCheck(parentCell.coord, nextCell.coord, "Lion"))
+                if(nextCell.y == 3)
                 {
-                    return true;
+                    LastCellArrive(player.ToString());
                 }
-                else
-                    return false;
+                moveResult = true;
             }
-            else
-                return false;
         }
-        else
-            return false;
-    }
 
-    public void LionInvade()
-    {
-        if (nextCell != null)
+        else if (player == Player.player_two)
         {
-            if (player == Player.player_one)
-            {
-                if (nextCell.y == 3)
-                {
-                    WinManager.instance.InvadeSuccess("player_one");
-                    PhotonManager.instance.InvadeSuccess("player_one");
-                }
-
-            }
-            else if (player == Player.player_two)
+            if (CanMove.instance.MoveCheck(parentCell.coord, nextCell.coord, "Lion"))
             {
                 if (nextCell.y == 0)
                 {
-                    WinManager.instance.InvadeSuccess("player_two");
-                    PhotonManager.instance.InvadeSuccess("player_two");
+                    LastCellArrive(player.ToString());
                 }
+                moveResult = true;
             }
         }
+        return moveResult;
+    }
+
+    public void LastCellArrive(string player)
+    {
+        WinManager.instance.InvadeSuccess(player);
+        PhotonManager.instance.InvadeSuccess(player);
     }
 }
+

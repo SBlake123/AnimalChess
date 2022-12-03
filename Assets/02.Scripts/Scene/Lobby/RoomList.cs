@@ -67,7 +67,6 @@ public class RoomList : MonoBehaviourPunCallbacks
             PhotonNetwork.JoinRoom(roomList[multiple + num].Name);
 
         }
-
         RoomListRenewal();
     }
 

@@ -16,3 +16,4 @@ public struct SSceneName
     public const string LOBBY_SCENE = "LobbyScene";
     public const string MAIN_SCENE = "MainScene";
 }
+
